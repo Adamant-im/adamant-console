@@ -1,0 +1,1 @@
+# adamant-console
