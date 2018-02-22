@@ -1,0 +1,28 @@
+{
+  "name": "adamant-console",
+  "version": "1.0.0",
+  "description": "console tools for ADAMANT.im",
+  "main": "index.js",
+  "dependencies": {
+    "@stablelib/utf8": "^0.10.1",
+    "big-integer": "^1.6.26",
+    "bignumber.js": "^6.0.0",
+    "bitcore-mnemonic": "^1.5.0",
+    "chloride": "^2.2.8",
+    "vorpal": "^1.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adamant-im/adamant-console.git"
+  },
+  "author": "Dmitriy Soloduhin <darkomen86@gmail.com> (http://optimsoft.ru)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Adamant-im/adamant-console/issues"
+  },
+  "homepage": "https://github.com/Adamant-im/adamant-console#readme"
+}
