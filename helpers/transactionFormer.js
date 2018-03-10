@@ -2,6 +2,7 @@ var sodium = require('sodium-browserify-tweetnacl')
 var crypto = require('crypto')
 var Mnemonic = require('bitcore-mnemonic')
 var bignum = require('./bignumber.js')
+var keys = require('./keys.js')
 var ByteBuffer = require('bytebuffer')
 const constants = require('./constants.js');
 const time = require('./time.js');
@@ -21,7 +22,7 @@ module.exports = {
     },    
     createBasicTransaction: function (data) {
 //    	{,"asset":{"chat":{"message":"f691d8f74fa901ac30435dc762bcc12af4a45075","own_message":"66989fb35c5c1f9d269baef76521c0dfad8d5b35be514fad","type":1}},"recipientId":"U4463182680120420828","senderId":"U7972131227889954319","signature":"93d0456db3bb202aead3582b86a997a1a8e4bca429d1e6653b56d87025f4a2a5d9bb4202e854c0b927469d90872c59a526c3b798c62fd7b643ea3e03ce51380b"}
-	var transaction = {type: data.transactionType, amount: 0, timestamp: time.getTime(), asset: {}, senderPublicKey: data.keyPair.publicKey.toString('hex')};
+	var transaction = {type: data.transactionType, amount: 0, timestamp: time.getTime(), asset: {}, senderPublicKey: data.keyPair.publicKey.toString('hex'), senderId: keys.createAddressFromPublicKey(data.keyPair.publicKey)};
 	return transaction;
     },
     createChatTransaction: function (data) {
