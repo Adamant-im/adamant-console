@@ -1,0 +1,16 @@
+{
+  "network": "testnet",
+  "networks": {
+    "testnet": {
+      "node": "127.0.0.1",
+      "port": "36667",
+      "ssl": false
+    },
+    "mainnet": {
+      "node": ["clown.adamant.im", "lake.adamant.im"],
+      "port": "443",
+      "ssl": true
+    }
+  },
+  "passPhrase": ""
+}
