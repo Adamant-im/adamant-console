@@ -12,5 +12,16 @@ module.exports = {
 	profile_update:  5000000,
 	avatar_upload: 10000000
     },
+    transactionTypes: {
+	SEND: 0,
+	SIGNATURE: 1,
+	DELEGATE: 2,
+	VOTE: 3,
+	MULTI: 4,
+	DAPP: 5,
+	IN_TRANSFER: 6,
+	OUT_TRANSFER: 7,
+	CHAT_MESSAGE: 8
+    },
     maxVotesPerTransaction: 33
 }
