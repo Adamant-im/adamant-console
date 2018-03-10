@@ -10,6 +10,7 @@
     "bitcore-mnemonic": "^1.5.0",
     "bytebuffer": "^5.0.1",
     "chloride": "^2.2.8",
+    "lodash": "^4.17.5",
     "vorpal": "^1.12.0"
   },
   "devDependencies": {},
