@@ -2,14 +2,26 @@
   "network": "testnet",
   "networks": {
     "testnet": {
-      "node": "127.0.0.1",
-      "port": "36667",
-      "ssl": false
+      "nodes": [ {"ip": "127.0.0.1", "protocol": "http", "port": 36667}]
     },
     "mainnet": {
-      "node": ["clown.adamant.im", "lake.adamant.im"],
-      "port": "443",
-      "ssl": true
+      "nodes": [
+        {
+          "ip": "clown.adamant.im",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "lake.adamant.im",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "endless.adamant.im",
+          "protocol": "https",
+          "port": ""
+        }
+      ]
     }
   },
   "passPhrase": ""

@@ -2,8 +2,8 @@
     Helpers to read config files.
 
     Default location is ~/.adm
-    Default filename can be overwritten usign ADM_CONFIG_FILENAME environment variable
-    Default filename can be overwritten usign ADM_CONFIG_PATH environment variable
+    Default filename can be overwritten using ADM_CONFIG_FILENAME environment variable
+    Default filename can be overwritten using ADM_CONFIG_PATH environment variable
  */
 
 const defaults = require('../config.default.json')
@@ -21,6 +21,24 @@ if (fs.existsSync(configFilePath)) {
     var config = require(configFilePath)
     config = _.merge({}, defaults, config)
 }
-
-module.exports = config || defaults
+config = config || defaults
+module.exports = {
+    getConfig: function () {
+        return config
+    },
+    getNodeConnectString: function () {
+        var config = this.getConfig()
+        var network = config.network
+        var currentNetwork = config.networks[network]
+        var index = Math.floor(Math.random() * currentNetwork.nodes.length)
+        if (!currentNetwork.nodes[index].protocol) {
+            currentNetwork.nodes[index].protocol = 'http'
+        }
+        var connectString = currentNetwork.nodes[index].protocol + '://' + currentNetwork.nodes[index].ip
+        if (currentNetwork.nodes[index].port) {
+            connectString += ':' + currentNetwork.nodes[index].port
+        }
+        return connectString
+    }
+}
 
