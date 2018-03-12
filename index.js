@@ -9,7 +9,7 @@ fs.readdirSync(opsDir).forEach((operation) => {
     const operationPath = path.join(opsDir, operation)
     const operationComponent = require(operationPath)
     admConsole.use(operationComponent)
-});
+})
 
 admConsole.find('help').alias('?')
 admConsole.find('exit').alias('q')
