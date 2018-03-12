@@ -14,6 +14,9 @@
     "popsicle": "^9.2.0",
     "vorpal": "^1.12.0"
   },
+  "bin" : {
+      "adm" : "./index.js"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
