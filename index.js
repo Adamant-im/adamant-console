@@ -16,7 +16,7 @@ admConsole.find('exit').alias('q')
 
 if (process.argv.length > 2) {
   admConsole
-  .parse(process.argv);
+  .parse(process.argv)
 
 }
 else {
