@@ -9,7 +9,7 @@ const popsicle = require('popsicle')
 module.exports=function (vorpal) {
     return vorpal.command('delegate new <input>').description('Registers new delegate name for current wallet').action(function(args, callback) {
     	var delegate_name = args.input
-		var keypair = keys.createKeypairFromPassPhrase(config.getConfig().passPhrase);
+		var keypair = keys.createKeypairFromPassPhrase(config.getConfig().passPhrase)
     	var data = {type: constants.transactionTypes.DELEGATE, keyPair: keypair, username: delegate_name}
     	var transaction = transactionFormer.createTransaction(data.type, data);
     	var self = this

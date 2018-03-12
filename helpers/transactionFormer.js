@@ -10,7 +10,8 @@ module.exports = {
     createTransaction: function (type, data) {
 		switch (type) {
 			case constants.transactionTypes.SEND:
-				break;
+				return this.createSendTransaction(data)
+			    break;
 			case constants.transactionTypes.VOTE:
 				return this.createVoteTransaction(data)
             case constants.transactionTypes.DELEGATE:
@@ -21,8 +22,17 @@ module.exports = {
 		return {};
     },    
     createBasicTransaction: function (data) {
-		var transaction = {type: data.transactionType, amount: 0, timestamp: time.getTime(), asset: {}, senderPublicKey: data.keyPair.publicKey.toString('hex'), senderId: keys.createAddressFromPublicKey(data.keyPair.publicKey)};
-		return transaction;
+		var transaction = {type: data.transactionType, amount: 0, timestamp: time.getTime(), asset: {}, senderPublicKey: data.keyPair.publicKey.toString('hex'), senderId: keys.createAddressFromPublicKey(data.keyPair.publicKey)}
+		return transaction
+    },
+    createSendTransaction: function (data) {
+        data.transactionType = constants.transactionTypes.SEND
+        var transaction = this.createBasicTransaction(data)
+        transaction.asset = {}
+        transaction.recipientId= data.recipientId
+        transaction.amount = data.amount
+        transaction.signature = this.transactionSign(transaction, data.keyPair)
+        return transaction;
     },
     createChatTransaction: function (data) {
 	
@@ -33,7 +43,7 @@ module.exports = {
 		transaction.asset = {"delegate": { "username": data.username, publicKey: data.keyPair.publicKey.toString('hex')}}
 		transaction.recipientId= null
 		transaction.signature = this.transactionSign(transaction, data.keyPair)
-		return transaction;
+		return transaction
     },
 	createVoteTransaction: function (data) {
         data.transactionType = constants.transactionTypes.VOTE
@@ -56,8 +66,8 @@ module.exports = {
 	    	case constants.transactionTypes.SEND:
     	    	break
 			case constants.transactionTypes.DELEGATE:
-    				assetBytes = this.delegatesGetBytes(transaction)
-    				assetSize = assetBytes.length;
+    			assetBytes = this.delegatesGetBytes(transaction)
+    			assetSize = assetBytes.length;
     	    	break
             case constants.transactionTypes.VOTE:
                 assetBytes = this.voteGetBytes(transaction)
@@ -69,70 +79,70 @@ module.exports = {
     	    	break
 	    	default:
     			 alert('Not supported yet')
-	}
-
-	var bb = new ByteBuffer(1 + 4 + 32 + 8 + 8 + 64 + 64 + assetSize, true)
-
-	bb.writeByte(transaction.type)
-	bb.writeInt(transaction.timestamp)
-
-	var senderPublicKeyBuffer = new Buffer(transaction.senderPublicKey, 'hex')
-	for (var i = 0; i < senderPublicKeyBuffer.length; i++) {
-	    bb.writeByte(senderPublicKeyBuffer[i])
-	}
-
-	if (transaction.requesterPublicKey) {
-	    var requesterPublicKey = new Buffer(transaction.requesterPublicKey, 'hex')
-
-	    for (var i = 0; i < requesterPublicKey.length; i++) {
-    		bb.writeByte(requesterPublicKey[i])
 	    }
-	}
 
-	if (transaction.recipientId) {
-	    var recipient = transaction.recipientId.slice(1)
-	    recipient = new bignum(recipient).toBuffer({size: 8})
+        var bb = new ByteBuffer(1 + 4 + 32 + 8 + 8 + 64 + 64 + assetSize, true)
 
-	    for (i = 0; i < 8; i++) {
-    		bb.writeByte(recipient[i] || 0)
-	    }
-	} else {
-	    for (i = 0; i < 8; i++) {
-    		bb.writeByte(0)
-	    }
-	}
+        bb.writeByte(transaction.type)
+        bb.writeInt(transaction.timestamp)
 
-	bb.writeLong(transaction.amount)
+        var senderPublicKeyBuffer = new Buffer(transaction.senderPublicKey, 'hex')
+        for (var i = 0; i < senderPublicKeyBuffer.length; i++) {
+            bb.writeByte(senderPublicKeyBuffer[i])
+        }
 
-	if (assetSize > 0) {
-	    for (var i = 0; i < assetSize; i++) {
-    		 bb.writeByte(assetBytes[i])
-	    }
-	}
+        if (transaction.requesterPublicKey) {
+            var requesterPublicKey = new Buffer(transaction.requesterPublicKey, 'hex')
 
-	if (!skipSignature && transaction.signature) {
-	    var signatureBuffer = new Buffer(transaction.signature, 'hex')
-	    for (var i = 0; i < signatureBuffer.length; i++) {
-    		bb.writeByte(signatureBuffer[i])
-	    }
-	}
+            for (var i = 0; i < requesterPublicKey.length; i++) {
+                bb.writeByte(requesterPublicKey[i])
+            }
+        }
 
-	if (!skipSecondSignature && transaction.signSignature) {
-	    var signSignatureBuffer = new Buffer(transaction.signSignature, 'hex')
-	    for (var i = 0; i < signSignatureBuffer.length; i++) {
-    		bb.writeByte(signSignatureBuffer[i])
-	    }
-	}
+        if (transaction.recipientId) {
+            var recipient = transaction.recipientId.slice(1)
+            recipient = new bignum(recipient).toBuffer({size: 8})
 
-	bb.flip()
-	var arrayBuffer = new Uint8Array(bb.toArrayBuffer())
-	var buffer = []
+            for (i = 0; i < 8; i++) {
+                bb.writeByte(recipient[i] || 0)
+            }
+        } else {
+            for (i = 0; i < 8; i++) {
+                bb.writeByte(0)
+            }
+        }
 
-	for (var i = 0; i < arrayBuffer.length; i++) {
-	    buffer[i] = arrayBuffer[i]
-	}
+        bb.writeLong(transaction.amount)
 
-	return new Buffer(buffer)
+        if (assetSize > 0) {
+            for (var i = 0; i < assetSize; i++) {
+                 bb.writeByte(assetBytes[i])
+            }
+        }
+
+        if (!skipSignature && transaction.signature) {
+            var signatureBuffer = new Buffer(transaction.signature, 'hex')
+            for (var i = 0; i < signatureBuffer.length; i++) {
+                bb.writeByte(signatureBuffer[i])
+            }
+        }
+
+        if (!skipSecondSignature && transaction.signSignature) {
+            var signSignatureBuffer = new Buffer(transaction.signSignature, 'hex')
+            for (var i = 0; i < signSignatureBuffer.length; i++) {
+                bb.writeByte(signSignatureBuffer[i])
+            }
+        }
+
+        bb.flip()
+        var arrayBuffer = new Uint8Array(bb.toArrayBuffer())
+        var buffer = []
+
+        for (var i = 0; i < arrayBuffer.length; i++) {
+            buffer[i] = arrayBuffer[i]
+        }
+
+        return new Buffer(buffer)
     },
     transactionSign: function (trs, keypair) {
 		var hash = this.getHash(trs)
