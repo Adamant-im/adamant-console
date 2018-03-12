@@ -22,7 +22,7 @@
     "type": "git",
     "url": "git+https://github.com/Adamant-im/adamant-console.git"
   },
-  "author": "Dmitriy Soloduhin <darkomen86@gmail.com> (http://optimsoft.ru)",
+  "author": "Dmitriy Soloduhin <devs@adamant.in> (https://adamant.im)",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/Adamant-im/adamant-console/issues"
