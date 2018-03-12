@@ -16,7 +16,7 @@ module.exports=function (vorpal) {
         else {
             if (args.type==='tokens') {
                 var recipient_name = args.address
-                var amount = args.payload
+                var amount = "" + args.payload
                 if (amount.indexOf('ADM')>0) {
                     amount=parseInt(parseFloat(amount)*100000000)
                 }
@@ -25,7 +25,6 @@ module.exports=function (vorpal) {
                 var keypair = keys.createKeypairFromPassPhrase(config.getConfig().passPhrase)
                 var data = { keyPair: keypair, recipientId: recipient_name, amount: amount}
                 var transaction = transactionFormer.createTransaction(constants.transactionTypes.SEND, data)
-                this.log(transaction)
                 var self = this
                 popsicle.request({
                     method: 'POST',
