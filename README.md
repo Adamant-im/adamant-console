@@ -6,9 +6,15 @@ Command-line utilities to work with ADAMANT blockchain.
 ## Installing
 
 ### using npm directly
-Command below will install adamant-console globally, you could use it then in command line as **adm**
+
+Command below will install adamant-console globally
 ```
 npm install -g adamant-console
+```
+After you could use it as in command line as **adm**
+
+``` 
+adm 
 ```
 
 ### build from source
