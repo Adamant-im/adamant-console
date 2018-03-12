@@ -1,11 +1,9 @@
 
 Command-line utilities to work with ADAMANT blockchain.
 
-#Quick Start
+# Quick Start
 
-
-##Installing
-
+## Installing
 
 ### using npm directly
 Command below will install adamant-console globally, you could use it then in command line as **adm**
@@ -28,7 +26,7 @@ node index.js
 
 ```
 
-##Configuration
+## Configuration
 
 System search for config file in this location (order priority): 
 ~/.adm/config.json ./config.json
@@ -45,7 +43,7 @@ Default config file name location (~/.adm) can be overwritten using **ADM_CONFIG
 
 Current account is the one with passPhrase parameter in config
 
-##Commands
+## Commands
 
 All commands are issued from the default account.
 
@@ -65,7 +63,7 @@ adm help #will execute help command and exit
 
 To send tokens you can use send tokens command
 
-####Format
+#### Format
 
 ``` send tokens <address> <amount> ```
 
@@ -73,7 +71,7 @@ Address must be address in ADAMANT network.
 Amount can be written in two ways. If you add ADM in address it will transfer needed amount of ADM tokens.
 If you omit it, tool will expect you to provide it with integer amount of tokens to transfer (ADM * 100000000) 
 
-####Example
+#### Example
 ```
 send tokens U7972131227889954319 1ADM
 ```
@@ -83,7 +81,7 @@ send tokens U7972131227889954319 1ADM
 
 To register user as delegate you can use delegate new command. 
 
-####Format
+#### Format
 
 ``` delegate new <name> ```
 
@@ -91,7 +89,7 @@ Name is delegate name you want to register with. It must be unique. Not be simil
 
 Fee for registering as delegate is 300ADM
 
-####Example
+#### Example
 ```
 delegate new zero_c001
 ```
@@ -101,13 +99,13 @@ delegate new zero_c001
 
 To vote for delegate you can use vote for command 
 
-####Format
+#### Format
 
 ``` vote for <publickeys...> ```
 
 To vote for delegate, you must provide it publickeys, you can vote for 32 delegates in one command
 
-####Example
+#### Example
 ```
 vote for d2885bc8d4aa68f0f4c919077c1edcb9c9020a715f20cb6db7578cd6f68055bb b0b4d346382aa07b23c0b733d040424532201b9eb22004b66a79d4b44e9d1449
 ```
