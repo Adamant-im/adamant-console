@@ -18,6 +18,8 @@ module.exports = {
                 return this.createDelegateTransaction(data);
 			case constants.transactionTypes.CHAT_MESSAGE:
 				return this.createChatTransaction(data);
+            case constants.transactionTypes.STATE:
+                return this.createStateTransaction(data);
 		}
 		return {};
     },    
@@ -31,6 +33,19 @@ module.exports = {
         transaction.asset = {}
         transaction.recipientId= data.recipientId
         transaction.amount = data.amount
+        transaction.signature = this.transactionSign(transaction, data.keyPair)
+        return transaction;
+    },
+    createStateTransaction: function (data) {
+        data.transactionType = constants.transactionTypes.STATE
+        var transaction = this.createBasicTransaction(data)
+        transaction.asset = {"state" : {
+                key: data.key,
+                value: data.value,
+                type :0
+            }}
+        transaction.recipientId= null
+        transaction.amount = 0
         transaction.signature = this.transactionSign(transaction, data.keyPair)
         return transaction;
     },
@@ -69,6 +84,10 @@ module.exports = {
     			assetBytes = this.delegatesGetBytes(transaction)
     			assetSize = assetBytes.length;
     	    	break
+            case constants.transactionTypes.STATE:
+                assetBytes = this.statesGetBytes(transaction)
+                assetSize = assetBytes.length;
+                break
             case constants.transactionTypes.VOTE:
                 assetBytes = this.voteGetBytes(transaction)
                 assetSize = assetBytes.length;
@@ -169,6 +188,33 @@ module.exports = {
 	    	throw e;
 		}
 		return buf;
+    },
+    statesGetBytes: function (trs) {
+        if (!trs.asset.state.value) {
+            return null;
+        }
+        var buf;
+
+        try {
+            buf = Buffer.from([]);
+            var stateBuf = Buffer.from(trs.asset.state.value, 'hex');
+            buf = Buffer.concat([buf, stateBuf]);
+
+            if (trs.asset.state.key) {
+                var keyBuf = Buffer.from(trs.asset.state.key, 'hex');
+                buf = Buffer.concat([buf, keyBuf]);
+            }
+
+            var bb = new ByteBuffer(4 + 4, true);
+            bb.writeInt(trs.asset.state.type);
+            bb.flip();
+
+            buf = Buffer.concat([buf, bb.toBuffer()]);
+        } catch (e) {
+            throw e;
+        }
+
+        return buf;
     },
     chatGetBytes: function (trs) {
 	var buf
