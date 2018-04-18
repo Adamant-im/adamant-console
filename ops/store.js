@@ -15,9 +15,8 @@ module.exports=function (vorpal) {
         popsicle.request({
             method: 'POST',
             url: config.getNodeConnectString()+'/api/states/store',
-            body: transaction
+            body: {transaction: transaction}
         }).then(function (res) {
-            console.log(res)
             self.log(JSON.stringify(JSON.parse(res.body),null,4))
             callback()
         })
