@@ -50,7 +50,17 @@ module.exports = {
         return transaction;
     },
     createChatTransaction: function (data) {
-	
+        data.transactionType = constants.transactionTypes.CHAT_MESSAGE
+        var transaction = this.createBasicTransaction(data)
+        transaction.asset = {"chat" : {
+                message: data.message,
+                own_message: data.own_message,
+                type : data.message_type
+            }}
+        transaction.recipientId = data.recipientId
+        transaction.amount = 0
+        transaction.signature = this.transactionSign(transaction, data.keyPair)
+        return transaction;
     },
     createDelegateTransaction: function (data) {
 		data.transactionType = constants.transactionTypes.DELEGATE
@@ -197,11 +207,10 @@ module.exports = {
 
         try {
             buf = Buffer.from([]);
-            var stateBuf = Buffer.from(trs.asset.state.value, 'hex');
+            var stateBuf = Buffer.from(trs.asset.state.value);
             buf = Buffer.concat([buf, stateBuf]);
-
             if (trs.asset.state.key) {
-                var keyBuf = Buffer.from(trs.asset.state.key, 'hex');
+                var keyBuf = Buffer.from(trs.asset.state.key);
                 buf = Buffer.concat([buf, keyBuf]);
             }
 
