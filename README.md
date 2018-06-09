@@ -34,12 +34,12 @@ node index.js
 
 ## Configuration
 
-System search for config file in this location (order priority): 
+System searches for config file in this location (order priority): 
 ~/.adm/config.json ./config.json
 
-If no config is found data from config.default.json is taken.
+If no config is found, data from config.default.json is taken.
 
-Config is in json format.
+Config is in JSON format.
 
 Data in config is merged with config.default.json, so you don't need to define already defined values, if you don't want to override them.
 
@@ -47,7 +47,7 @@ Config file name (config.json) can be overwritten using **ADM_CONFIG_FILENAME** 
 
 Default config file name location (~/.adm) can be overwritten using **ADM_CONFIG_PATH** environment variable.
 
-Current account is the one with passPhrase parameter in config
+Current account is the one with passPhrase parameter in config.
 
 ## Commands
 
@@ -67,14 +67,14 @@ adm help #will execute help command and exit
 
 ### Sending tokens
 
-To send tokens you can use send tokens command
+To send tokens you can use *send tokens* command
 
 #### Format
 
 ``` send tokens <address> <amount> ```
 
-Address must be address in ADAMANT network.  
-Amount can be written in two ways. If you add ADM in address it will transfer needed amount of ADM tokens.
+Address must be an address in ADAMANT network.  
+Amount can be written in two ways. If you add ADM in amount, it will transfer needed amount of ADM tokens.
 If you omit it, tool will expect you to provide it with integer amount of tokens to transfer (ADM * 100000000) 
 
 #### Example
@@ -85,15 +85,15 @@ send tokens U7972131227889954319 1ADM
 
 ### Register delegate
 
-To register user as delegate you can use delegate new command. 
+To register user as delegate you can use *delegate new* command. 
 
 #### Format
 
 ``` delegate new <name> ```
 
-Name is delegate name you want to register with. It must be unique. Not be similar to Adamant address. Delegaate name can only contain alphanumeric characters with the exception of !@$&_. 
+Name is delegate name you want to register with. It must be unique. It should not be similar to ADAMANT address. Delegate name can only contain alphanumeric characters with the exception of !@$&_.
 
-Fee for registering as delegate is 300ADM
+Fee for registering as delegate is 3000 ADM.
 
 #### Example
 ```
@@ -103,13 +103,13 @@ delegate new zero_c001
 
 ### Vote for delegate
 
-To vote for delegate you can use vote for command 
+To vote for delegate you can use *vote for* command 
 
 #### Format
 
 ``` vote for <publickeys...> ```
 
-To vote for delegate, you must provide it publickeys, you can vote for 32 delegates in one command
+To vote for delegate, you must provide their public keys, you can vote for 32 delegates in one command.
 
 #### Example
 ```
