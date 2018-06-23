@@ -20,7 +20,7 @@ const configFilePath = `${configDirPath}/${configFileName}`
 if (fs.existsSync(configFilePath)) {
     var config = require(configFilePath)
     config = _.merge({}, defaults, config)
-} else if (fsExistsSync(configFileName)) {
+} else if (fs.existsSync(configFileName)) {
     config = _.merge({}, defaults, config)
 }
 
