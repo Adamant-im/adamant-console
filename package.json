@@ -12,10 +12,10 @@
     "chloride": "^2.2.8",
     "lodash": "^4.17.5",
     "popsicle": "^9.2.0",
-    "vorpal": "^1.12.0"
+    "vorpal": "zyuhel/vorpal#1f2740a"
   },
-  "bin" : {
-      "adm" : "./index.js"
+  "bin": {
+    "adm": "./index.js"
   },
   "devDependencies": {},
   "scripts": {
