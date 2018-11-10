@@ -115,13 +115,13 @@ module.exports = {
         bb.writeByte(transaction.type)
         bb.writeInt(transaction.timestamp)
 
-        var senderPublicKeyBuffer = new Buffer(transaction.senderPublicKey, 'hex')
+        var senderPublicKeyBuffer = Buffer.from(transaction.senderPublicKey, 'hex')
         for (var i = 0; i < senderPublicKeyBuffer.length; i++) {
             bb.writeByte(senderPublicKeyBuffer[i])
         }
 
         if (transaction.requesterPublicKey) {
-            var requesterPublicKey = new Buffer(transaction.requesterPublicKey, 'hex')
+            var requesterPublicKey =  Buffer.from(transaction.requesterPublicKey, 'hex')
 
             for (var i = 0; i < requesterPublicKey.length; i++) {
                 bb.writeByte(requesterPublicKey[i])
@@ -150,14 +150,14 @@ module.exports = {
         }
 
         if (!skipSignature && transaction.signature) {
-            var signatureBuffer = new Buffer(transaction.signature, 'hex')
+            var signatureBuffer =  Buffer.from(transaction.signature, 'hex')
             for (var i = 0; i < signatureBuffer.length; i++) {
                 bb.writeByte(signatureBuffer[i])
             }
         }
 
         if (!skipSecondSignature && transaction.signSignature) {
-            var signSignatureBuffer = new Buffer(transaction.signSignature, 'hex')
+            var signSignatureBuffer =  Buffer.from(transaction.signSignature, 'hex')
             for (var i = 0; i < signSignatureBuffer.length; i++) {
                 bb.writeByte(signSignatureBuffer[i])
             }
