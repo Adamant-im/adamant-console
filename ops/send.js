@@ -6,10 +6,11 @@ const constants = require('../helpers/constants.js')
 const encrypter = require('../helpers/encrypter.js')
 const transactionFormer = require('../helpers/transactionFormer.js')
 const config = require('../helpers/configReader.js')
+const passArgs = require('../helpers/passArgs.js')
 const popsicle = require('popsicle')
 var possibleTypes=['tokens', 'message', 'signal', 'rich'];
 module.exports=function (vorpal) {
-    return vorpal.command('send <type> <address> <payload>').description('send tokens/message/rich/signal to another account').autocomplete(possibleTypes).action(function(args, callback) {
+    return vorpal.command('send <type> <address> <payload>').allowUnknownOptions().description('send tokens/message/rich/signal to another account').autocomplete(possibleTypes).action(function(args, callback) {
         if (!possibleTypes.includes(args.type)) {
             this.log('Not valid type');
             callback();
@@ -23,7 +24,7 @@ module.exports=function (vorpal) {
                 }
                 else
                     amount=parseInt(amount)
-                var keypair = keys.createKeypairFromPassPhrase(config.getConfig().passPhrase)
+                var keypair = keys.createKeypairFromPassPhrase(passArgs.getPassPhrase(args))
                 var data = { keyPair: keypair, recipientId: recipient_name, amount: amount}
                 var transaction = transactionFormer.createTransaction(constants.transactionTypes.SEND, data)
                 var self = this
@@ -38,7 +39,7 @@ module.exports=function (vorpal) {
             } else if (args.type==='message' || args.type==='rich' || args.type==='signal') {
                 var recipient_name = args.address
                 var message = args.payload
-                var keypair = keys.createKeypairFromPassPhrase(config.getConfig().passPhrase)
+                var keypair = keys.createKeypairFromPassPhrase(passArgs.getPassPhrase(args))
                 var message_type = 1
                 if (args.type==='rich')
                     message_type = 2
@@ -70,14 +71,6 @@ module.exports=function (vorpal) {
                         callback()
                     }
                 })
-                /* return this.$http.get(this.getAddressString() + '/api/accounts/getPublicKey?address=' + recipientAddress).then(response => {
-                    if (response.body.success) {
-                    window.pk_cache[recipientAddress] = response.body.publicKey
-                    return response.body.publicKey
-                }
-
-                */
-
             }
         }
     });
