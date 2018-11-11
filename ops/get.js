@@ -33,7 +33,7 @@ module.exports=function (vorpal) {
                     endpoint = '/api/transactions/get?id=' + args.input
                     break
                 case 'transactions':
-                    endpoint = '/api/transactions?' + args.input
+                    endpoint = '/api/transactions?' + args.input.split(' ').join('').split(',').join('&')
                     break
 				default:
                     this.log('Not implemented yet')
