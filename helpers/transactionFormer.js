@@ -171,7 +171,7 @@ module.exports = {
             buffer[i] = arrayBuffer[i]
         }
 
-        return new Buffer(buffer)
+        return Buffer.from(buffer)
     },
     transactionSign: function (trs, keypair) {
 		var hash = this.getHash(trs)
