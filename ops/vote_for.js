@@ -10,10 +10,11 @@ module.exports=function (vorpal) {
     return vorpal.command('vote for <input...>').description('Add votes for delegates (or remove them by prepending - to delegate name').action(function(args, callback) {
         var votes = args.input
         for (var i in votes) {
-    	    if (votes[i][0]!=='-' && votes[i][0]!=='+')
+            var firstSymbol=votes[i].toString().charAt(0);
+    	    if (firstSymbol!=='-' && firstSymbol!=='+')
                 votes[i]='+'+votes[i]
         }
-		var keypair = keys.createKeypairFromPassPhrase(config.getConfig().passPhrase)
+	var keypair = keys.createKeypairFromPassPhrase(config.getConfig().passPhrase)
     	var data = {type: constants.transactionTypes.VOTE, keyPair: keypair, votes: votes}
     	var transaction = transactionFormer.createTransaction(data.type, data)
         this.log(transaction)
