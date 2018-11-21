@@ -1,0 +1,6 @@
+deploy:
+  provider: npm
+  email: "devs@adamant.im"
+  api_key: "dab65b62-8f46-441f-9b98-60dc36e03df8"
+  on:
+    tags: true
