@@ -1,36 +1,17 @@
 
 Command-line utilities to work with ADAMANT blockchain.
 
-# Quick Start
+# Understanding iteraction with ADAMANT blockchain
 
-## Installing
+ADAMANT node is based on Lisk 0.9 code, but with important difference. ADAMANT have *only secure API*, and you cannot transfer passphrase to node to make any action with wallet, like Lisk 0.9 does. Instead, node *requires signed transaction* to make any action.
+So, to iteract with ADAMANT blockcahin, you do not need ADAMANT node installed, while you still can do that.
+It is easier and better to use Adamant-console for iteractions. Adamant-console is command-line interface utility that gets command to make an action and returns result info in JSON.
 
-### using npm directly
+You can use any programming languages to interact with Adamant-console, like PHP, Python, NodeJS, bash.
 
-Command below will install adamant-console globally
-```
-npm install -g adamant-console
-```
-After you could use it as in command line as **adm**
+# Installing Adamant-console
 
-``` 
-adm 
-```
-
-### build from source
-If you want to build it from source, clone this repository and install dependencies
-```
-git clone https://github.com/Adamant-im/adamant-console/ #fetching code from github
-npm install #installing dependencies
-chmod a+x index.js #making executable
-link index.js /usr/local/bin/adm #create symlink
-``` 
-
-Then you can use it as **adm**, alternatively you can run it without making executable
-```
-node index.js
-
-```
+The installation process described in [Console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Installation).
 
 ## Configuration
 
