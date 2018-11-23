@@ -29,6 +29,9 @@ module.exports = {
     getConfig: function () {
         return config
     },
+    getRpcConfig: function () {
+        return config.rpc
+    },
     getNodeConnectString: function () {
         var config = this.getConfig()
         var network = config.network
