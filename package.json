@@ -26,6 +26,9 @@
     "type": "git",
     "url": "git+https://github.com/Adamant-im/adamant-console.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },  
   "author": "Dmitriy Soloduhin <devs@adamant.in> (https://adamant.im)",
   "license": "GPL-3.0",
   "bugs": {
