@@ -1,10 +1,7 @@
 {
   "network": "testnet",
   "rpc": {
-    "port": 5080,
-    "host": "127.0.0.1",
-    "path:": "/",
-    "strict": true
+    "port": 5080
   },
   "networks": {
     "testnet": {

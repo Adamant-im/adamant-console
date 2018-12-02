@@ -28,13 +28,15 @@ module.exports=function (vorpal) {
                 var data = { keyPair: keypair, recipientId: recipient_name, amount: amount}
                 var transaction = transactionFormer.createTransaction(constants.transactionTypes.SEND, data)
                 var self = this
-                popsicle.request({
+                return popsicle.request({
                     method: 'POST',
                     url: config.getNodeConnectString()+'/api/transactions/process',
                     body: {transaction: transaction}
                 }).then(function (res) {
                     self.log(JSON.stringify(JSON.parse(res.body),null,4))
-                    callback()
+                    if (callback)
+                        callback()
+                    return JSON.parse(res.body)
                 })
             } else if (args.type==='message' || args.type==='rich' || args.type==='signal') {
                 var recipient_name = args.address
@@ -64,11 +66,17 @@ module.exports=function (vorpal) {
                             body: {transaction: transaction}
                         }).then(function (res) {
                             self.log(JSON.stringify(JSON.parse(res.body),null,4))
-                            callback()
+                            if (callback)
+                                callback()
+                            else
+                                return JSON.parse(res.body)
                         })
                     } else {
-                        self.log('Unknown address')
-                        callback()
+                        self.log('{"success":false, "error":"Unknown Address"}')
+                        if (callback)
+                            callback()
+                        else
+                            return {success:false, error:'Unknown Address'}
                     }
                 })
             }
