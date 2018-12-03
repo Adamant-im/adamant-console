@@ -46,12 +46,15 @@ module.exports=function (vorpal) {
 			return
 		}
         var self = this
-        popsicle.request({
+        return popsicle.request({
             method: 'GET',
             url: config.getNodeConnectString() + endpoint
         }).then(function (res) {
-            self.log(JSON.stringify(JSON.parse(res.body),null,4))
-            callback()
+            var answer = JSON.parse(res.body)
+            self.log(JSON.stringify(answer,null,4))
+            if (callback)
+                callback()
+            return answer
         })
 	}
     })
