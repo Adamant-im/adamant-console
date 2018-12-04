@@ -200,7 +200,7 @@ module.exports = function (vorpal) {
         }
         var server = rpc.server(methods)
         server.http().listen(config.getRpcConfig().port)
-        this.log('Daemon listing on port ' + config.getRpcConfig().port)
+        this.log('JSON-RPC server listening on port ' + config.getRpcConfig().port)
 
     });
 };
