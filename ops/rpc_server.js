@@ -196,7 +196,7 @@ module.exports = function (vorpal) {
                         })
                     }
                 })
-            },
+            }
         }
         var server = rpc.server(methods)
         server.http().listen(config.getRpcConfig().port)
