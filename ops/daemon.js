@@ -109,14 +109,13 @@ module.exports = function (vorpal) {
             },
             getTransaction: function (args) {
                 return new Promise(function (resolve, reject) {
-                    var cmd = 'get address '
+                    var cmd = 'get transaction '
                     var err = null
                     var data = {success: false}
                     if (!args.length || args.length>1) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
-
                         cmd += '"' + args[0] + '"'
                         data = vorpal.execSync(cmd)
                         data.then(function (data) {
@@ -125,6 +124,36 @@ module.exports = function (vorpal) {
                                     err = server.error(1, data.error)
                                 } else {
                                     data = data.transaction
+                                }
+                            }
+                            if (err)
+                                reject(err)
+                            else
+                                resolve(data)
+                        }).catch(function (err) {
+                            reject(err)
+                        })
+                    }
+                })
+            },
+            getTransactions: function (args) {
+                return new Promise(function (resolve, reject) {
+                    var cmd = 'get transactions '
+                    var err = null
+                    var data = {success: false}
+                    if (!args.length) {
+                        err = this.error(-32602)
+                        reject(err)
+                    } else {
+                        cmd += '"' + args.join(',') + '"'
+                        console.log(cmd)
+                        data = vorpal.execSync(cmd)
+                        data.then(function (data) {
+                            if (data) {
+                                if (data.success === false) {
+                                    err = server.error(1, data.error)
+                                } else {
+                                    data = data.transactions
                                 }
                             }
                             if (err)

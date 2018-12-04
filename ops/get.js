@@ -7,7 +7,9 @@ module.exports=function (vorpal) {
     return vorpal.command('get <type> <input> [params...]').description('Fetch info. Available types:  address, block, delegate, transaction, transactions, state').autocomplete(possibleTypes).action(function(args, callback) {
 	if (!possibleTypes.includes(args.type)) {
 	    this.log('Not valid type')
-	    callback()
+        if (callback)
+	        callback()
+        return {success: false, error:'Not valid type'}
 	}
 	else {
 		var endpoint=''
@@ -33,17 +35,19 @@ module.exports=function (vorpal) {
                     endpoint = '/api/transactions/get?id=' + args.input
                     break
                 case 'transactions':
-                    endpoint = '/api/transactions?' + args.input.split(' ').join('').split(',').join('&')
+                    endpoint = '/api/transactions?' + args.input.split("'").join('').split(' ').join('').split(',').join('&')
                     break
 				default:
                     this.log('Not implemented yet')
-                    callback()
-                    return
+                    if (callback)
+                        callback()
+                    return {success: false, error:'Not implemented yet'}
             }
         } else {
             this.log('Not implemented yet')
-            callback()
-			return
+            if (callback)
+                callback()
+            return {success: false, error:'Not implemented yet'}
 		}
         var self = this
         return popsicle.request({
