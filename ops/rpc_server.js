@@ -3,7 +3,7 @@ var rpc = require('jayson/promise')
 const config = require('../helpers/configReader.js')
 
 module.exports = function (vorpal) {
-    return vorpal.command('daemon').allowUnknownOptions().description('Runs JSON-RPC daemon').action(function (args, callback) {
+    return vorpal.command('rpc server').allowUnknownOptions().description('Runs JSON-RPC server').action(function (args, callback) {
         var self = this
 
         var methods = {
