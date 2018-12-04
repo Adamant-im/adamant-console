@@ -17,6 +17,9 @@ module.exports=function (vorpal) {
             }
     	}
     	this.log(JSON.stringify(answer,null,4))
-    	callback()
+        if (callback)
+    	    callback()
+        else
+            return answer
     });
 };
