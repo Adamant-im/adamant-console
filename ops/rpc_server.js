@@ -145,7 +145,7 @@ module.exports = function (vorpal) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
-                        cmd += '"recipientId=' + args[0] + ',type=0,orderBy=timestamp:desc"'
+                        cmd += '"recipientId=' + args[0] + ',and:type=0,orderBy=timestamp:desc"'
                         data = vorpal.execSync(cmd)
                         data.then(function (data) {
                             if (data) {
