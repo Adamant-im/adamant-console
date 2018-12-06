@@ -1,9 +1,11 @@
 
-Command-line utilities to work with ADAMANT blockchain.
+Adamant-console is Command-line utilities to interact with ADAMANT blockchain.
+
+It allows you to run commands like send tokens, create new address and get information.
 
 # Understanding interaction with ADAMANT blockchain
 
-Use Adamant-console for interaction with ADAMANT blockchain. 
+Adamant-console is preferable way for interaction with ADAMANT blockchain. 
 
 ADAMANT node is based on Lisk 0.9 code, but with important difference. ADAMANT has *only secure API*, and you cannot transfer passphrase to node to make any action with wallet, like Lisk 0.9 does. Instead, node *requires signed transaction* to make any action.
 
@@ -16,6 +18,8 @@ You can use any programming languages to interact with Adamant-console, like PHP
 # Installing and configuring Adamant-console
 
 The installation and configuration are described in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Installation-and-configuration).
+
+Note, by default, `network` parameter set to `testnet`. If you want to work with mainnet, set the value to `mainnet`.
 
 # Commands
 
