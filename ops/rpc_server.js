@@ -17,12 +17,21 @@ module.exports = function (vorpal) {
                     } else resolve(data.account);
                 })
             },
+            clientVersion: function (args) {
+                return new Promise(function (resolve, reject) {
+                    var cmd = 'client version '
+                    var err = null
+                    var data = {success: false}
+                    data = vorpal.execSync(cmd)
+                    resolve(data.version)
+                })
+            },
             getAddress: function (args) {
                 return new Promise(function (resolve, reject) {
                     var cmd = 'get address '
                     var err = null
                     var data = {success: false}
-                    if (!args.length || args.length>1) {
+                    if (!args.length || args.length > 1) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
@@ -52,7 +61,7 @@ module.exports = function (vorpal) {
                     var cmd = 'get block '
                     var err = null
                     var data = {success: false}
-                    if (!args.length || args.length>1) {
+                    if (!args.length || args.length > 1) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
@@ -82,7 +91,7 @@ module.exports = function (vorpal) {
                     var cmd = 'get delegate '
                     var err = null
                     var data = {success: false}
-                    if (!args.length || args.length>1) {
+                    if (!args.length || args.length > 1) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
@@ -112,7 +121,7 @@ module.exports = function (vorpal) {
                     var cmd = 'get transaction '
                     var err = null
                     var data = {success: false}
-                    if (!args.length || args.length>1) {
+                    if (!args.length || args.length > 1) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
@@ -141,7 +150,7 @@ module.exports = function (vorpal) {
                     var cmd = 'get transactions '
                     var err = null
                     var data = {success: false}
-                    if (!args.length || args.length>1) {
+                    if (!args.length || args.length > 1) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
@@ -192,6 +201,56 @@ module.exports = function (vorpal) {
                             reject(err)
                         })
                     }
+                })
+            },
+            nodeHeight: function (args) {
+                return new Promise(function (resolve, reject) {
+                    var cmd = 'node height '
+                    var err = null
+                    var data = {success: false}
+
+                    data = vorpal.execSync(cmd)
+                    data.then(function (data) {
+                        if (data) {
+                            if (data.success === false) {
+                                err = server.error(1, data.error)
+                            } else {
+                                data = data.height
+                            }
+                        }
+                        if (err)
+                            reject(err)
+                        else
+                            resolve(data)
+                    }).catch(function (err) {
+                        reject(err)
+                    })
+
+                })
+            },
+            nodeVersion: function (args) {
+                return new Promise(function (resolve, reject) {
+                    var cmd = 'node version '
+                    var err = null
+                    var data = {success: false}
+
+                    data = vorpal.execSync(cmd)
+                    data.then(function (data) {
+                        if (data) {
+                            if (data.success === false) {
+                                err = server.error(1, data.error)
+                            } else {
+                                data = {commit: data.commit, version: data.version}
+                            }
+                        }
+                        if (err)
+                            reject(err)
+                        else
+                            resolve(data)
+                    }).catch(function (err) {
+                        reject(err)
+                    })
+
                 })
             },
             sendTokens: function (args) {
