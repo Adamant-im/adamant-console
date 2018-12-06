@@ -5,7 +5,7 @@ It allows you to run commands like send tokens, create new address and get infor
 
 # Understanding interaction with ADAMANT blockchain
 
-Adamant-console is prefferable way for interaction with ADAMANT blockchain. 
+Adamant-console is preferable way for interaction with ADAMANT blockchain. 
 
 ADAMANT node is based on Lisk 0.9 code, but with important difference. ADAMANT has *only secure API*, and you cannot transfer passphrase to node to make any action with wallet, like Lisk 0.9 does. Instead, node *requires signed transaction* to make any action.
 
