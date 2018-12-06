@@ -14,7 +14,9 @@ const configPathName = '.adm'
 const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.json'
 const userDir = os.homedir()
 const configDirPath = process.env.ADM_CONFIG_PATH || `${userDir}/${configPathName}`
-const configFilePath = `${configDirPath}/${configFileName}`
+const untildify = require('untildify');
+const configFilePath = untildify(`${configDirPath}/${configFileName}`)
+
 
 
 if (fs.existsSync(configFilePath)) {
