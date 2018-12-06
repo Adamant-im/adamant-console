@@ -17,6 +17,15 @@ module.exports = function (vorpal) {
                     } else resolve(data.account);
                 })
             },
+            clientVersion: function (args) {
+                return new Promise(function (resolve, reject) {
+                    var cmd = 'client version '
+                    var err = null
+                    var data = {success: false}
+                    data = vorpal.execSync(cmd)
+                    resolve(data.version)
+                })
+            },
             getAddress: function (args) {
                 return new Promise(function (resolve, reject) {
                     var cmd = 'get address '
