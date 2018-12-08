@@ -21,9 +21,9 @@ const configFilePath = untildify(`${configDirPath}/${configFileName}`)
 
 if (fs.existsSync(configFilePath)) {
     var config = require(configFilePath)
-    config = _.merge({}, defaults, config)
+    config = Object.assign(defaults, config)
 } else if (fs.existsSync(configFileName)) {
-    config = _.merge({}, defaults, config)
+    config = Object.assign(defaults, config)
 }
 
 config = config || defaults
