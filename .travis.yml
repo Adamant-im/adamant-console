@@ -1,3 +1,13 @@
+language: node_js
+node_js:
+  - "lts/*"
+os:
+  - linux
+cache:
+  directories:
+    - node_modules
+install:
+  - npm install
 deploy:
   provider: npm
   email: "devs@adamant.im"

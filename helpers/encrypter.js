@@ -25,7 +25,7 @@ module.exports = {
     encodeMessage: function (msg, keypair, recipientPublicKey) {
         var nonce = Buffer.allocUnsafe(24)
         sodium.randombytes(nonce)
-        var plainText = Buffer.from(msg)
+        var plainText = Buffer.from(msg.toString())
         var DHPublicKey = ed2curve.convertPublicKey(new Uint8Array(this.hexToBytes(recipientPublicKey)))
         var DHSecretKey = ed2curve.convertSecretKey(keypair.privateKey)
         var encrypted = nacl.box(plainText, nonce, DHPublicKey, DHSecretKey)
