@@ -7,20 +7,25 @@
     "@stablelib/utf8": "^0.10.1",
     "big-integer": "^1.6.26",
     "bignumber.js": "^6.0.0",
-    "bitcore-mnemonic": "^1.5.0",
+    "bitcore-mnemonic": "^1.7.0",
     "bytebuffer": "^5.0.1",
     "chloride": "^2.2.8",
     "jayson": "^2.1.0",
     "lodash": "^4.17.5",
     "popsicle": "^9.2.0",
+    "untildify": "^3.0.3",
     "vorpal": "zyuhel/vorpal#1f2740a"
   },
   "bin": {
     "adm": "./index.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "shelljs": "^0.8.3",
+    "should": "^13.2.3"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha test"
   },
   "repository": {
     "type": "git",
