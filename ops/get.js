@@ -2,9 +2,9 @@
 */
 const config = require('../helpers/configReader.js')
 const popsicle = require('popsicle')
-var possibleTypes=['account', 'address', 'block', 'delegate', 'transaction', 'transactions']
+var possibleTypes=['account', 'address', 'block', 'blocks', 'delegate', 'transaction', 'transactions']
 module.exports=function (vorpal) {
-    return vorpal.command('get <type> <input> [params...]').description('Fetch info. Available types:  address, block, delegate, transaction, transactions, state').autocomplete(possibleTypes).action(function(args, callback) {
+    return vorpal.command('get <type> <input> [params...]').description('Fetch info. Available types:  address, block, blocks, delegate, transaction, transactions, state').autocomplete(possibleTypes).action(function(args, callback) {
 	if (!possibleTypes.includes(args.type)) {
 	    this.log('Not valid type')
         if (callback)
@@ -25,6 +25,9 @@ module.exports=function (vorpal) {
                 case 'block':
                     endpoint = '/api/blocks/get?id=' + args.input
 					break
+                case 'blocks':
+                    endpoint = '/api/blocks?' + args.input.split("'").join('').split(' ').join('').split(',').join('&')
+                    break
                 case 'state':
                     endpoint = '/api/states/get?id=' + args.input
 					break
