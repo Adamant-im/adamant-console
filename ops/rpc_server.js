@@ -349,9 +349,9 @@ module.exports = function (vorpal) {
                         err = this.error(-32602)
                         reject(err)
                     } else {
-                        if (args.passPhrase)
-                            cmd += '--passPhrase="' + args.passPhrase + '"'
                         cmd = cmd + args.address + ' ' + args.amount
+                        if (args.passPhrase)
+                            cmd += ' --passPhrase "' + args.passPhrase + '"'
                         data = vorpal.execSync(cmd)
                         data.then(function (data) {
                             if (data) {
