@@ -31,3 +31,4 @@ To use *JSON-RPC* interface, [start JSON-RPC daemon](https://github.com/Adamant-
 
 # Integration notes with ADM token for Exchanges
 
+We wrote [Integration notes with ADM token for Exchanges](https://medium.com/adamant-im/integration-notes-with-adm-token-for-exchanges-d51a80c36aaf). Document describes how to create accounts for deposits, get balances and transactions info, as well as, how to make withdrawals.
