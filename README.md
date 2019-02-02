@@ -11,8 +11,6 @@ ADAMANT node is based on Lisk 0.9 code, but with important difference. ADAMANT h
 
 Adamant-console connects to ADAMANT nodes on your choice (set in configuration file), it can be any node, locally installed on your machine, or from other side of the Earth. As Console doesn’t transfer passphrases to nodes, it is safe to connect to any node. Important thing, node you connect should have [API enabled](https://medium.com/adamant-im/how-to-run-your-adamant-node-on-ubuntu-990e391e8fcc#fe7e).
 
-So, your exchange do not need ADAMANT node installed, while you still can [do that](https://medium.com/adamant-im/how-to-run-your-adamant-node-on-ubuntu-990e391e8fcc).
-
 You can use any programming languages to interact with Adamant-console, like PHP, Python, NodeJS, bash.
 
 # Installing and configuring Adamant-console
