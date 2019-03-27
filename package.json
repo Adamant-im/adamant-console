@@ -1,6 +1,6 @@
 {
   "name": "adamant-console",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Console API and JSON-RPC for interacting with ADAMANT Blockchain",
   "main": "index.js",
   "dependencies": {

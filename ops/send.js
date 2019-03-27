@@ -41,6 +41,7 @@ module.exports=function (vorpal) {
             } else if (args.type==='message' || args.type==='rich' || args.type==='signal') {
                 var recipient_name = args.address
                 var message = args.payload
+                message = message.replace(/\\line/g, "\n")
                 var keypair = keys.createKeypairFromPassPhrase(passArgs.getPassPhrase(args))
                 var message_type = 1
                 if (args.type==='rich')
