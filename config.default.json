@@ -1,5 +1,8 @@
 {
   "network": "testnet",
+  "rpc": {
+    "port": 5080
+  },
   "networks": {
     "testnet": {
       "nodes": [ {"ip": "127.0.0.1", "protocol": "http", "port": 36667}]

@@ -2,9 +2,9 @@
 */
 const config = require('../helpers/configReader.js')
 const popsicle = require('popsicle')
-var possibleTypes=['account', 'address', 'block', 'blocks', 'delegate', 'transaction', 'transactions']
+var possibleTypes=['height', 'version']
 module.exports=function (vorpal) {
-    return vorpal.command('get <type> <input> [params...]').description('Fetch info. Available types:  address, block, blocks, delegate, transaction, transactions, state').autocomplete(possibleTypes).action(function(args, callback) {
+    return vorpal.command('node <type>').description('Fetch information about node. Available types:  height, version').autocomplete(possibleTypes).action(function(args, callback) {
 	if (!possibleTypes.includes(args.type)) {
 	    this.log('Not valid type')
         if (callback)
@@ -19,27 +19,12 @@ module.exports=function (vorpal) {
 		}
 		if (!multipleSelect) {
             switch (args.type) {
-                case 'address':
-                	endpoint = '/api/accounts?address=' + args.input
+                case 'height':
+                	endpoint = '/api/blocks/getHeight'
 					break
-                case 'block':
-                    endpoint = '/api/blocks/get?id=' + args.input
+                case 'version':
+                    endpoint = '/api/peers/version'
 					break
-                case 'blocks':
-                    endpoint = '/api/blocks?' + args.input.split("'").join('').split(' ').join('').split(',').join('&')
-                    break
-                case 'state':
-                    endpoint = '/api/states/get?id=' + args.input
-					break
-                case 'delegate':
-                    endpoint = '/api/delegates/get?username=' + args.input
-                    break
-                case 'transaction':
-                    endpoint = '/api/transactions/get?id=' + args.input
-                    break
-                case 'transactions':
-                    endpoint = '/api/transactions?' + args.input.split("'").join('').split(' ').join('').split(',').join('&')
-                    break
 				default:
                     this.log('Not implemented yet')
                     if (callback)

@@ -1,117 +1,32 @@
 
-Command-line utilities to work with ADAMANT blockchain.
+Adamant-console is Command-line utilities to interact with ADAMANT blockchain.
 
-# Quick Start
+It allows you to run commands like send tokens, create new address and get information.
 
-## Installing
+# Understanding interaction with ADAMANT blockchain
 
-### using npm directly
+Adamant-console is preferable way for interaction with ADAMANT blockchain. 
 
-Command below will install adamant-console globally
-```
-npm install -g adamant-console
-```
-After you could use it as in command line as **adm**
+ADAMANT node is based on Lisk 0.9 code, but with important difference. ADAMANT has *only secure API*, and you cannot transfer passphrase to node to make any action with wallet, like Lisk 0.9 does. Instead, node *requires signed transaction* to make any action.
 
-``` 
-adm 
-```
+Adamant-console connects to ADAMANT nodes on your choice (set in configuration file), it can be any node, locally installed on your machine, or from other side of the Earth. As Console doesn’t transfer passphrases to nodes, it is safe to connect to any node. Important thing, node you connect should have [API enabled](https://medium.com/adamant-im/how-to-run-your-adamant-node-on-ubuntu-990e391e8fcc#fe7e).
 
-### build from source
-If you want to build it from source, clone this repository and install dependencies
-```
-git clone https://github.com/Adamant-im/adamant-console/ #fetching code from github
-npm install #installing dependencies
-chmod a+x index.js #making executable
-link index.js /usr/local/bin/adm #create symlink
-``` 
+You can use any programming languages to interact with Adamant-console, like PHP, Python, NodeJS, bash.
 
-Then you can use it as **adm**, alternatively you can run it without making executable
-```
-node index.js
+# Installing and configuring Adamant-console
 
-```
+The installation and configuration are described in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Installation-and-configuration).
 
-## Configuration
+Note, by default, `network` parameter set to `testnet`. If you want to work with mainnet, set the value to `mainnet`.
 
-System searches for config file in this location (order priority): 
-~/.adm/config.json ./config.json
+# Commands
 
-If no config is found, data from config.default.json is taken.
+There are two ways of interacting with ADAMANT blockchain. You can use *command-line interface (CLI)* or *JSON-RPC* on your choice. See [Running Commands in Adamant console](https://github.com/Adamant-im/adamant-console/wiki/Running-Commands-in-Adamant-console).
 
-Config is in JSON format.
+List of available for *CLI* commands see in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands) also.
 
-Data in config is merged with config.default.json, so you don't need to define already defined values, if you don't want to override them.
+To use *JSON-RPC* interface, [start JSON-RPC daemon](https://github.com/Adamant-im/adamant-console/wiki/JSON-RPC) on Adamant-console.
 
-Config file name (config.json) can be overwritten using **ADM_CONFIG_FILENAME** environment variable.
+# Integration notes with ADM token for Exchanges
 
-Default config file name location (~/.adm) can be overwritten using **ADM_CONFIG_PATH** environment variable.
-
-Current account is the one with passPhrase parameter in config.
-
-## Commands
-
-All commands are issued from the default account.
-
-Commands can be used in interactive mode, or non-interactively. 
-
-If you run console client with command it will run in non-interactive mode. 
-
-```
-adm #will run interactive mode
-``` 
-
-```
-adm help #will execute help command and exit
-```
-
-### Sending tokens
-
-To send tokens you can use *send tokens* command
-
-#### Format
-
-``` send tokens <address> <amount> ```
-
-Address must be an address in ADAMANT network.  
-Amount can be written in two ways. If you add ADM in amount, it will transfer needed amount of ADM tokens.
-If you omit it, tool will expect you to provide it with integer amount of tokens to transfer (ADM * 100000000) 
-
-#### Example
-```
-send tokens U7972131227889954319 1ADM
-```
-
-
-### Register delegate
-
-To register user as delegate you can use *delegate new* command. 
-
-#### Format
-
-``` delegate new <name> ```
-
-Name is delegate name you want to register with. It must be unique. It should not be similar to ADAMANT address. Delegate name can only contain alphanumeric characters with the exception of !@$&_.
-
-Fee for registering as delegate is 3000 ADM.
-
-#### Example
-```
-delegate new zero_c001
-```
-
-
-### Vote for delegate
-
-To vote for delegate you can use *vote for* command 
-
-#### Format
-
-``` vote for <publickeys...> ```
-
-To vote for delegate, you must provide their public keys, you can vote for 32 delegates in one command.
-
-#### Example
-```
-vote for d2885bc8d4aa68f0f4c919077c1edcb9c9020a715f20cb6db7578cd6f68055bb b0b4d346382aa07b23c0b733d040424532201b9eb22004b66a79d4b44e9d1449
-```
+We wrote [Integration notes with ADM token for Exchanges](https://medium.com/adamant-im/integration-notes-with-adm-token-for-exchanges-d51a80c36aaf). Document describes how to create accounts for deposits, get balances and transactions info, as well as, how to make withdrawals.

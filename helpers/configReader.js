@@ -14,20 +14,25 @@ const configPathName = '.adm'
 const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.json'
 const userDir = os.homedir()
 const configDirPath = process.env.ADM_CONFIG_PATH || `${userDir}/${configPathName}`
-const configFilePath = `${configDirPath}/${configFileName}`
+const untildify = require('untildify');
+const configFilePath = untildify(`${configDirPath}/${configFileName}`)
+
 
 
 if (fs.existsSync(configFilePath)) {
     var config = require(configFilePath)
-    config = _.merge({}, defaults, config)
+    config = Object.assign(defaults, config)
 } else if (fs.existsSync(configFileName)) {
-    config = _.merge({}, defaults, config)
+    config = Object.assign(defaults, config)
 }
 
 config = config || defaults
 module.exports = {
     getConfig: function () {
         return config
+    },
+    getRpcConfig: function () {
+        return config.rpc
     },
     getNodeConnectString: function () {
         var config = this.getConfig()
