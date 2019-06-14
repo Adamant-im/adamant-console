@@ -1,6 +1,7 @@
 /*
 */
 const config = require('../helpers/configReader.js')
+const constants = require('../helpers/constants.js')
 const keys = require('../helpers/keys.js');
 const passArgs = require('../helpers/passArgs.js')
 const popsicle = require('popsicle')
@@ -65,14 +66,18 @@ module.exports=function (vorpal) {
         }).then(function (res) {
             var answer = JSON.parse(res.body)
             if (args.type=='message') {
+                if (answer.transaction.type !== constants.transactionTypes.CHAT_MESSAGE) {
+                    if (callback)
+                        callback()
+                    return {success: false, error:"Not a message transaction"}
+                }
                 if (answer.transaction.asset.chat.own_message) {
                     var keypair = keys.createKeypairFromPassPhrase(passArgs.getPassPhrase(args))
                     var reader_address=keys.createAddressFromPublicKey(keypair.publicKey)
                     if (reader_address!=answer.transaction.senderId && reader_address!=answer.transaction.recipientId) {
-                        self.log("Can't decode message, key is not available");
                         if (callback)
                             callback()
-                        return false
+                        return {success: false, error:"Can't decode message, key is not available"}
                     }
                     recipient_name=answer.transaction.senderId
                     if (recipient_name===reader_address)
