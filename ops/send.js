@@ -10,7 +10,7 @@ const passArgs = require('../helpers/passArgs.js')
 const popsicle = require('popsicle')
 var possibleTypes=['tokens', 'message', 'signal', 'rich'];
 module.exports=function (vorpal) {
-    return vorpal.command('send <type> <address> <payload>').allowUnknownOptions().description('send tokens/message/rich/signal to another account').autocomplete(possibleTypes).action(function(args, callback) {
+    return vorpal.command('send <type> <address> <payload> [amount]').allowUnknownOptions().description('send tokens/message/rich/signal to another account').autocomplete(possibleTypes).action(function(args, callback) {
         if (!possibleTypes.includes(args.type)) {
             this.log('Not valid type');
             callback();
@@ -41,6 +41,15 @@ module.exports=function (vorpal) {
             } else if (args.type==='message' || args.type==='rich' || args.type==='signal') {
                 var recipient_name = args.address
                 var message = args.payload
+                var amount = 0
+                if (args.amount){
+                    amount = "" + args.amount
+                    if (amount.indexOf('ADM')>0) {
+                        amount=parseInt(parseFloat(amount)*100000000)
+                    }
+                    else
+                        amount=parseInt(amount)
+                }
                 message = message.replace(/\\line/g, "\n")
                 var keypair = keys.createKeypairFromPassPhrase(passArgs.getPassPhrase(args))
                 var message_type = 1
@@ -48,7 +57,7 @@ module.exports=function (vorpal) {
                     message_type = 2
                 if (args.type==='signal')
                     message_type = 3
-                var data = { keyPair: keypair, recipientId: recipient_name, message: message, message_type: message_type}
+                var data = { keyPair: keypair, amount: amount, recipientId: recipient_name, message: message, message_type: message_type}
 
                 var self = this
                 popsicle.request({

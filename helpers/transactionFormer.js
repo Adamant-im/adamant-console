@@ -22,7 +22,7 @@ module.exports = {
                 return this.createStateTransaction(data);
 		}
 		return {};
-    },    
+    },
     createBasicTransaction: function (data) {
 		var transaction = {type: data.transactionType, amount: 0, timestamp: time.getTime(), asset: {}, senderPublicKey: data.keyPair.publicKey.toString('hex'), senderId: keys.createAddressFromPublicKey(data.keyPair.publicKey)}
 		return transaction
@@ -59,6 +59,9 @@ module.exports = {
             }}
         transaction.recipientId = data.recipientId
         transaction.amount = 0
+        if (data.amount) {
+            transaction.amount = data.amount
+        }
         transaction.signature = this.transactionSign(transaction, data.keyPair)
         return transaction;
     },
