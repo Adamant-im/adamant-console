@@ -53,10 +53,14 @@ module.exports=function (vorpal) {
                 message = message.replace(/\\line/g, "\n")
                 var keypair = keys.createKeypairFromPassPhrase(passArgs.getPassPhrase(args))
                 var message_type = 1
-                if (args.type==='rich')
+                if (args.type==='rich') {
                     message_type = 2
-                if (args.type==='signal')
+                    message = message.replace(/\'/g, "\"")
+                }
+                if (args.type==='signal') {
                     message_type = 3
+                    message = message.replace(/\'/g, "\"")
+                }
                 var data = { keyPair: keypair, amount: amount, recipientId: recipient_name, message: message, message_type: message_type}
 
                 var self = this
