@@ -1,6 +1,6 @@
 {
   "name": "adamant-console",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Console API and JSON-RPC for interacting with ADAMANT Blockchain",
   "main": "index.js",
   "dependencies": {
@@ -34,7 +34,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Dmitriy Soloduhin <devs@adamant.im> (https://adamant.im)",
+  "author": "Dmitriy Soloduhin, Aleksei Lebedev <devs@adamant.im> (https://adamant.im)",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/Adamant-im/adamant-console/issues"
