@@ -7,8 +7,9 @@ const transactionFormer = require('../helpers/transactionFormer.js')
 const config = require('../helpers/configReader.js')
 const passArgs = require('../helpers/passArgs.js')
 const popsicle = require('popsicle')
+
 module.exports=function (vorpal) {
-    return vorpal.command('vote for <input...>').description('Add votes for delegates (or remove them by prepending - to delegate name').action(function(args, callback) {
+    return vorpal.command('vote for <input...>').description('Upvotes for delegates represented by <input...> comma-separated publicKeys. Downvotes, if "-" sign precedes publicKey.').action(function(args, callback) {
         var votes = args.input
         for (var i in votes) {
             var firstSymbol=votes[i].toString().charAt(0);

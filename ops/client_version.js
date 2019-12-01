@@ -2,8 +2,9 @@
 
 */
 const package = require('../package.json')
+
 module.exports = function (vorpal) {
-    return vorpal.command('client version').description('Shows adamant-console version').action(function (args, callback) {
+    return vorpal.command('client version').description('Shows Adamant-console version').action(function (args, callback) {
         answer = {
             success: true,
             version: package.version

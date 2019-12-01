@@ -9,10 +9,11 @@ const config = require('../helpers/configReader.js')
 const passArgs = require('../helpers/passArgs.js')
 const popsicle = require('popsicle')
 var possibleTypes=['tokens', 'message', 'signal', 'rich'];
+
 module.exports=function (vorpal) {
-    return vorpal.command('send <type> <address> <payload> [amount]').allowUnknownOptions().description('send tokens/message/rich/signal to another account').autocomplete(possibleTypes).action(function(args, callback) {
+    return vorpal.command('send <type> <address> <payload> [amount]').allowUnknownOptions().description('Sends tokens/message/rich/signal to another account').autocomplete(possibleTypes).action(function(args, callback) {
         if (!possibleTypes.includes(args.type)) {
-            this.log('Not valid type');
+            this.log(`Error: ${args.type} is unknown type for send command`);
             callback();
         }
         else {

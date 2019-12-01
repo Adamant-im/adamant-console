@@ -7,13 +7,14 @@ const passArgs = require('../helpers/passArgs.js')
 const popsicle = require('popsicle')
 const decrypter = require('../helpers/decrypter.js')
 var possibleTypes=['account', 'address', 'block', 'blocks', 'delegate', 'transaction', 'transactions', 'message']
+
 module.exports=function (vorpal) {
-    return vorpal.command('get <type> <input> [params...]').allowUnknownOptions().description('Fetch info. Available types:  address, block, blocks, delegate, transaction, transactions, state').autocomplete(possibleTypes).action(function(args, callback) {
+    return vorpal.command('get <type> <input> [params...]').allowUnknownOptions().description('Retrieves info. Available types: address, block, blocks, delegate, transaction, transactions, state').autocomplete(possibleTypes).action(function(args, callback) {
 	if (!possibleTypes.includes(args.type)) {
-	    this.log('Not valid type')
+	    this.log(`Error: ${args.type} is unknown type for get command`)
         if (callback)
 	        callback()
-        return {success: false, error:'Not valid type'}
+        return {success: false, error:`${args.type} is unknown type for get command`}
 	}
 	else {
 		var endpoint=''

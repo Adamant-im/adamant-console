@@ -3,13 +3,14 @@
 const config = require('../helpers/configReader.js')
 const popsicle = require('popsicle')
 var possibleTypes=['height', 'version']
+
 module.exports=function (vorpal) {
-    return vorpal.command('node <type>').description('Fetch information about node. Available types:  height, version').autocomplete(possibleTypes).action(function(args, callback) {
+    return vorpal.command('node <type>').description('Retrieves info about connected node. Available types: height, version').autocomplete(possibleTypes).action(function(args, callback) {
 	if (!possibleTypes.includes(args.type)) {
-	    this.log('Not valid type')
+	    this.log(`Error: ${args.type} is unknown type for node command`)
         if (callback)
 	        callback()
-        return {success: false, error:'Not valid type'}
+        return {success: false, error:`${args.type} is unknown type for node command`}
 	}
 	else {
 		var endpoint=''
