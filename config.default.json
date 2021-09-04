@@ -12,7 +12,7 @@
           "port": 36667
         },
         {
-          "ip": "http://testnode1.adamant.im",
+          "ip": "testnode1.adamant.im",
           "protocol": "https",
           "port": ""
         },
