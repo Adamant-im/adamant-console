@@ -1,11 +1,8 @@
+# Adamant-console
 
-Adamant-console is Command-line utilities to interact with ADAMANT blockchain.
+Adamant-console is Command-line utilities to interact with ADAMANT blockchain. It allows you to run commands like send tokens, create new address and get information.
 
-It allows you to run commands like send tokens, create new address and get information.
-
-# Understanding interaction with ADAMANT blockchain
-
-Adamant-console is preferable way for interaction with ADAMANT blockchain. 
+## Understanding interaction with ADAMANT blockchain
 
 ADAMANT node is based on Lisk 0.9 code, but with important difference. ADAMANT has *only secure API*, and you cannot transfer passphrase to node to make any action with wallet, like Lisk 0.9 does. Instead, node *requires signed transaction* to make any action.
 
@@ -13,20 +10,21 @@ Adamant-console connects to ADAMANT nodes on your choice (set in configuration f
 
 You can use any programming languages to interact with Adamant-console, like PHP, Python, NodeJS, bash.
 
-# Installing and configuring Adamant-console
+## Installing and configuring
 
 The installation and configuration are described in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Installation-and-configuration).
 
 Note, by default, `network` parameter set to `testnet`. If you want to work with mainnet, set the value to `mainnet`.
 
-# Commands
+## Using
 
-There are two ways of interacting with ADAMANT blockchain. You can use *command-line interface (CLI)* or *JSON-RPC* on your choice. See [Running Commands in Adamant console](https://github.com/Adamant-im/adamant-console/wiki/Running-Commands-in-Adamant-console).
+There are 3 ways of interacting with ADAMANT blockchain:
+- command-line interface (CLI). List of available for commands see in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands).
+- JSON-RPC. To use this interface, [start JSON-RPC daemon](https://github.com/Adamant-im/adamant-console/wiki/JSON-RPC) on Adamant-console.
+- directly through the built-in library. The available methods see in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Running-Commands-in-Adamant-library) also.
 
-List of available for *CLI* commands see in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands) also.
+See [Running Commands in Adamant console](https://github.com/Adamant-im/adamant-console/wiki/Running-Commands-in-Adamant-console).
 
-To use *JSON-RPC* interface, [start JSON-RPC daemon](https://github.com/Adamant-im/adamant-console/wiki/JSON-RPC) on Adamant-console.
-
-# Integration notes with ADM token for Exchanges
+## Integration notes with ADM token for Exchanges
 
 We wrote [Integration notes with ADM token for Exchanges](https://medium.com/adamant-im/integration-notes-with-adm-token-for-exchanges-d51a80c36aaf). Document describes how to create accounts for deposits, get balances and transactions info, as well as, how to make withdrawals.

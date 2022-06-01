@@ -10,22 +10,7 @@
           "ip": "127.0.0.1",
           "protocol": "http",
           "port": 36667
-        },
-        {
-          "ip": "testnode1.adamant.im",
-          "protocol": "https",
-          "port": ""
-        },
-        {
-          "ip": "65.21.156.2",
-          "protocol": "http",
-          "port": 36667
-        },
-        {
-          "ip": "95.217.19.144",
-          "protocol": "http",
-          "port": 36667
-        }        
+        }
       ]
     },
     "mainnet": {

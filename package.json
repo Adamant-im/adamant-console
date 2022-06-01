@@ -1,43 +1,49 @@
 {
   "name": "adamant-console",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "Console API and JSON-RPC for interacting with ADAMANT Blockchain",
-  "main": "index.js",
-  "dependencies": {
-    "@stablelib/utf8": "^0.10.1",
-    "big-integer": "^1.6.26",
-    "bignumber.js": "^6.0.0",
-    "bitcore-mnemonic": "^1.7.0",
-    "bytebuffer": "^5.0.1",
-    "chloride": "^2.2.8",
-    "jayson": "^2.1.0",
-    "lodash": "^4.17.5",
-    "popsicle": "^9.2.0",
-    "untildify": "^3.0.3",
-    "vorpal": "zyuhel/vorpal#1f2740a"
-  },
+  "main": "lib/api/index.js",
   "bin": {
-    "adm": "./index.js"
+    "adm": "./bin/adamant.js"
   },
-  "devDependencies": {
-    "mocha": "^5.2.0",
-    "shelljs": "^0.8.3",
-    "should": "^13.2.3"
+  "engines": {
+    "node": ">=14"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint -f visualstudio .",
+    "lint:fix": "npx eslint -f visualstudio --fix"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Adamant-im/adamant-console.git"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "author": "Dmitriy Soloduhin, Aleksei Lebedev <devs@adamant.im> (https://adamant.im)",
+  "keywords": [
+    "ADAMANT"
+  ],
+  "author": "",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/Adamant-im/adamant-console/issues"
   },
-  "homepage": "https://github.com/Adamant-im/adamant-console#readme"
+  "homepage": "https://github.com/Adamant-im/adamant-console#readme",
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  },
+  "dependencies": {
+    "@stablelib/utf8": "^1.0.1",
+    "adamant-api": "^1.5.0",
+    "bitcore-mnemonic": "^8.25.28",
+    "chalk": "^4.1.2",
+    "commander": "^9.3.0",
+    "ed2curve": "^0.3.0",
+    "jayson": "^3.6.6",
+    "joi": "^17.6.0",
+    "leven": "^3.1.0",
+    "semver": "^7.3.7",
+    "sodium-browserify-tweetnacl": "^0.2.6",
+    "tweetnacl": "^1.0.3"
+  }
 }
