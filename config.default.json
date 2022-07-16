@@ -5,7 +5,13 @@
   },
   "networks": {
     "testnet": {
-      "nodes": [ {"ip": "127.0.0.1", "protocol": "http", "port": 36667}]
+      "nodes": [
+        {
+          "ip": "127.0.0.1",
+          "protocol": "http",
+          "port": 36667
+        }
+      ]
     },
     "mainnet": {
       "nodes": [

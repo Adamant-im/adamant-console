@@ -1,32 +1,36 @@
+# Adamant-console
 
-Adamant-console is Command-line utilities to interact with ADAMANT blockchain.
+Adamant-console is Command-line utilities to interact with ADAMANT blockchain. It allows you to run commands like send tokens, create new address and get information.
 
-It allows you to run commands like send tokens, create new address and get information.
+## Understanding interaction with ADAMANT blockchain
 
-# Understanding interaction with ADAMANT blockchain
+ADAMANT has *only secure API*, and you cannot transfer passphrase to node to make any action with wallet. Instead, node *requires signed transaction* to make any action.
 
-Adamant-console is preferable way for interaction with ADAMANT blockchain. 
-
-ADAMANT node is based on Lisk 0.9 code, but with important difference. ADAMANT has *only secure API*, and you cannot transfer passphrase to node to make any action with wallet, like Lisk 0.9 does. Instead, node *requires signed transaction* to make any action.
-
-Adamant-console connects to ADAMANT nodes on your choice (set in configuration file), it can be any node, locally installed on your machine, or from other side of the Earth. As Console doesn’t transfer passphrases to nodes, it is safe to connect to any node. Important thing, node you connect should have [API enabled](https://medium.com/adamant-im/how-to-run-your-adamant-node-on-ubuntu-990e391e8fcc#fe7e).
+Adamant-console connects to ADAMANT nodes on your choice (set in configuration file), it can be any node, locally installed on your machine, or from other side of the Earth. As Console doesn’t transfer passphrases to nodes, it's safe to connect to any node. Node you connect should have [API enabled](https://medium.com/adamant-im/how-to-run-your-adamant-node-on-ubuntu-990e391e8fcc#fe7e).
 
 You can use any programming languages to interact with Adamant-console, like PHP, Python, NodeJS, bash.
 
-# Installing and configuring Adamant-console
+Alternative ways to interact with ADAMANT blockchain:
+
+- [Direct node's API](https://github.com/Adamant-im/adamant/wiki)
+- [JS API library](https://github.com/Adamant-im/adamant-api-jsclient/wiki)
+
+## Installing and configuring
 
 The installation and configuration are described in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Installation-and-configuration).
 
 Note, by default, `network` parameter set to `testnet`. If you want to work with mainnet, set the value to `mainnet`.
 
-# Commands
+## Using Console
 
-There are two ways of interacting with ADAMANT blockchain. You can use *command-line interface (CLI)* or *JSON-RPC* on your choice. See [Running Commands in Adamant console](https://github.com/Adamant-im/adamant-console/wiki/Running-Commands-in-Adamant-console).
+There are 3 ways of using ADAMANT Console tool:
 
-List of available for *CLI* commands see in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands) also.
+- Command-line interface (CLI). List of available for commands see in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands).
+- JSON-RPC. To use this interface, [start JSON-RPC daemon](https://github.com/Adamant-im/adamant-console/wiki/JSON-RPC) on Adamant-console.
+- Directly through the built-in library. The available methods see in [Adamant-console Wiki](https://github.com/Adamant-im/adamant-console/wiki/Running-Commands-in-Adamant-library) also.
 
-To use *JSON-RPC* interface, [start JSON-RPC daemon](https://github.com/Adamant-im/adamant-console/wiki/JSON-RPC) on Adamant-console.
+See [Running Commands in Adamant console](https://github.com/Adamant-im/adamant-console/wiki/Running-Commands-in-Adamant-console).
 
-# Integration notes with ADM token for Exchanges
+## Integration notes with ADM token for Exchanges
 
-We wrote [Integration notes with ADM token for Exchanges](https://medium.com/adamant-im/integration-notes-with-adm-token-for-exchanges-d51a80c36aaf). Document describes how to create accounts for deposits, get balances and transactions info, as well as, how to make withdrawals.
+See [Integration notes with ADM token for Exchanges](https://medium.com/adamant-im/integration-notes-with-adm-token-for-exchanges-d51a80c36aaf). Document describes how to create accounts for deposits, get balances and transactions info, as well as, how to make withdrawals.
