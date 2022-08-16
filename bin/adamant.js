@@ -109,6 +109,8 @@ enhanceErrorMessages('missingArgument', (argName) => (
   `Missing required argument ${chalk.yellow(`<${argName}>`)}.`
 ));
 
+enhanceErrorMessages('unknownCommand', () => `Unknown command.`);
+
 enhanceErrorMessages('unknownOption', (optionName) => (
   `Unknown option ${chalk.yellow(optionName)}.`
 ));
