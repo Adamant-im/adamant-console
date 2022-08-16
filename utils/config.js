@@ -1,7 +1,8 @@
-/* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 
 const Joi = require('joi');
+const jsonminify = require('jsonminify');
+const chalk = require('chalk');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
@@ -15,26 +16,61 @@ const homeDir = os.homedir();
 const configDirPath = process.env.ADM_CONFIG_PATH || `${homeDir}/${configPathName}`;
 
 const configFilePath = path.resolve(`${configDirPath}/${configFileName}`);
+const localConfigFilePath = path.resolve(configFileName);
 
-const defaultConfig = require('../config.default.json');
+const defaultConfigFilePath = path.resolve('../config.default.json');
 
-let config = defaultConfig;
+function loadConfig(configPath) {
+  let parsedConfig = {};
 
-if (fs.existsSync(configFilePath)) {
-  const loadedConfig = require(configFilePath);
+  try {
+    const data = fs.readFileSync(configPath, 'utf8');
 
-  config = {
-    ...defaultConfig,
-    ...loadedConfig,
-  };
-} else if (fs.existsSync(configFileName)) {
-  const localConfigFilePath = path.resolve(configFileName);
-  const loadedConfig = require(localConfigFilePath);
+    parsedConfig = JSON.parse(jsonminify(data));
+  } catch (err) {
+    console.log(chalk.red(
+      'Failed to parse the configuration from:\n'
+      + `└── ${chalk.yellow(configPath)}.`,
+    ));
+    console.log();
+    console.log(err);
+    process.exit(1);
+  }
 
-  config = {
-    ...defaultConfig,
-    ...loadedConfig,
-  };
+  return parsedConfig;
+}
+
+let config = loadConfig(defaultConfigFilePath);
+
+const configPaths = [
+  configFilePath,
+  localConfigFilePath,
+];
+
+for (const configPath of configPaths) {
+  let existingConfigPath;
+
+  const configWithComments = `${configPath}c`;
+
+  if (fs.existsSync(configPath)) {
+    existingConfigPath = configPath;
+  } else if (
+    !process.env.ADM_CONFIG_FILENAME
+    && fs.existsSync(configWithComments)
+  ) {
+    existingConfigPath = configWithComments;
+  }
+
+  if (existingConfigPath) {
+    const loadedConfig = loadConfig(existingConfigPath);
+
+    config = {
+      ...config,
+      ...loadedConfig,
+    };
+
+    break;
+  }
 }
 
 const netSchema = Joi.object({
