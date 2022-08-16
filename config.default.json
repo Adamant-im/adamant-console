@@ -1,8 +1,19 @@
 {
+  /** 
+    The Console will use this ADM passPhrase by default.
+    See 'Installing and configuring' in Readme for details.
+  **/
+  "passPhrase": "distance expect praise frequent..",
+
+  /** Choose 'mainnet' or 'testnet' **/
   "network": "testnet",
+
+  /** Port used to run RPC server **/
   "rpc": {
     "port": 5080
   },
+
+  /** Additionall, you can specify what ADM nodes to use **/
   "networks": {
     "testnet": {
       "nodes": [
@@ -32,6 +43,5 @@
         }
       ]
     }
-  },
-  "passPhrase": ""
+  }
 }
