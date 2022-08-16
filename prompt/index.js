@@ -14,19 +14,27 @@ module.exports = (callback) => {
   console.log(`Welcome to ADM CLI v${packageInfo.version}.`);
   console.log('Type "help" for more information.');
 
-  process.stdin.on('keypress', (str, key) => {
+  process.stdin.on('keypress', (eventName, key) => {
     if (key.name === 'up') {
-      rl.write(
-        history.back(rl.line),
-        { ctrl: true, name: 'u' },
-      );
+      const line = history.back(rl.line);
+
+      if (line) {
+        rl.write(
+          null,
+          { ctrl: true, name: 'u' },
+        );
+
+        rl.write(line);
+      }
     }
 
     if (key.name === 'down') {
       rl.write(
-        history.next(rl.line),
+        null,
         { ctrl: true, name: 'u' },
       );
+
+      rl.write(history.next(rl.line));
     }
   });
 
