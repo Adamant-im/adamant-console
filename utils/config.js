@@ -15,10 +15,10 @@ const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.json';
 const homeDir = os.homedir();
 const configDirPath = process.env.ADM_CONFIG_PATH || `${homeDir}/${configPathName}`;
 
-const configFilePath = path.resolve(`${configDirPath}/${configFileName}`);
+const configFilePath = path.normalize(`${configDirPath}/${configFileName}`);
 const localConfigFilePath = path.resolve(configFileName);
 
-const defaultConfigFilePath = path.resolve('../config.default.json');
+const defaultConfigFilePath = path.join(__dirname, '../config.default.json');
 
 function loadConfig(configPath) {
   let parsedConfig = {};
