@@ -2,6 +2,7 @@
 
 const { program, CommanderError } = require('commander');
 const chalk = require('chalk');
+const parseShell = require('shell-quote').parse;
 
 const semver = require('semver');
 const leven = require('leven');
@@ -125,7 +126,7 @@ if (INTERACTIVE_MODE) {
 
   prompt(async (command) => {
     try {
-      await program.parseAsync(command.split(' '), { from: 'user' });
+      await program.parseAsync(parseShell(command), { from: 'user' });
     } catch (err) {
       if (!(err instanceof CommanderError)) {
         console.log(err);

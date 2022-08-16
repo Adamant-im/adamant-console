@@ -43,6 +43,7 @@
     "joi": "^17.6.0",
     "leven": "^3.1.0",
     "semver": "^7.3.7",
+    "shell-quote": "^1.7.3",
     "sodium-browserify-tweetnacl": "^0.2.6",
     "tweetnacl": "^1.0.3"
   }
