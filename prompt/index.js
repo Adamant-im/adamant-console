@@ -24,7 +24,7 @@ module.exports = (callback) => {
           { ctrl: true, name: 'u' },
         );
 
-        rl.write(line)
+        rl.write(line);
       }
     }
 
@@ -34,7 +34,7 @@ module.exports = (callback) => {
         { ctrl: true, name: 'u' },
       );
 
-      rl.write(history.next(rl.line))
+      rl.write(history.next(rl.line));
     }
   });
 
