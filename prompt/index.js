@@ -1,8 +1,8 @@
-const readline = require('readline');
-const History = require('./history');
-const packageInfo = require('../package.json');
+import readline from 'readline';
+import History from './history.js';
+import packageInfo from '../package.json' assert { type: 'json' };
 
-module.exports = (callback) => {
+export default (callback) => {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,

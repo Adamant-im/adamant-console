@@ -1,13 +1,15 @@
 /* eslint-disable import/no-dynamic-require */
 
-const Joi = require('joi');
-const jsonminify = require('jsonminify');
-const chalk = require('chalk');
-const os = require('os');
-const fs = require('fs');
-const path = require('path');
+import os from 'os';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const log = require('./log');
+import Joi from 'joi';
+import jsonminify from 'jsonminify';
+import chalk from 'chalk';
+
+import * as log from './log.js';
 
 const configPathName = '.adm';
 const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.json';
@@ -19,6 +21,7 @@ const configDirPath =
 const configFilePath = path.normalize(`${configDirPath}/${configFileName}`);
 const localConfigFilePath = path.resolve(configFileName);
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const defaultConfigFilePath = path.join(__dirname, '../config.default.json');
 
 function loadConfig(configPath) {
@@ -92,7 +95,7 @@ const schema = Joi.object({
     [config.network]: netSchema.required(),
   }),
   // passPhrase can be set later
-  passPhrase: Joi.string().allow(''),
+  passphrase: Joi.string().allow(''),
 });
 
 const { error, value } = schema.validate(config, {
@@ -105,4 +108,4 @@ if (error) {
   );
 }
 
-module.exports = value;
+export default value;

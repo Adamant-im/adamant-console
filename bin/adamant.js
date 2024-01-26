@@ -1,24 +1,37 @@
 #!/usr/bin/env node
 
-const { program, CommanderError } = require('commander');
-const chalk = require('chalk');
-const parseShell = require('shell-quote').parse;
+import { program, CommanderError } from 'commander';
+import chalk from 'chalk';
+import { parse as parseShell } from 'shell-quote';
 
-const semver = require('semver');
-const leven = require('leven');
+import { satisfies } from 'semver';
+import leven from 'leven';
 
-const prompt = require('../prompt/index');
+import prompt from '../prompt/index.js';
 
-const log = require('../utils/log');
-const config = require('../utils/config');
+import { log } from '../utils/log.js';
+import config from '../utils/config.js';
 
-const packageInfo = require('../package.json');
-const enhanceErrorMessages = require('../utils/enhanceErrorMessages');
+import packageInfo from '../package.json' assert { type: 'json' };
+
+import installAccountCommands from '../lib/account.js';
+import installGetCommands from '../lib/get.js';
+import installNodeCommands from '../lib/node.js';
+import installSendCommands from '../lib/send.js';
+import installRpcServerCommands from '../lib/rpc.js';
+import installDelegateCommands from '../lib/delegate.js';
+import installVoteCommands from '../lib/vote.js';
+
+const INTERACTIVE_MODE = process.argv.length < 3;
+
+if (INTERACTIVE_MODE) {
+  program.exitOverride();
+}
 
 const requiredVersion = packageInfo.engines.node;
 
 const checkNodeVersion = (wanted, id) => {
-  if (!semver.satisfies(process.version, wanted, { includePrerelease: true })) {
+  if (!satisfies(process.version, wanted, { includePrerelease: true })) {
     console.log(
       chalk.red(
         `You are using Node ${process.version}, but this version of ${id}` +
@@ -53,17 +66,10 @@ const suggestCommands = (unknownCommand) => {
 };
 
 program
+  .name('adm')
   .version(`adm ${packageInfo.version}`)
   .usage('<type> <command> [options]')
-  .option('-p, --passPhrase <phrase>', 'account pass phrase');
-
-const installAccountCommands = require('../lib/account');
-const installGetCommands = require('../lib/get');
-const installNodeCommands = require('../lib/node');
-const installSendCommands = require('../lib/send');
-const installRpcServerCommands = require('../lib/rpc');
-const installDelegateCommands = require('../lib/delegate');
-const installVoteCommands = require('../lib/vote');
+  .option('-p, --passphrase <phrase>', 'account passphrase');
 
 installAccountCommands(program);
 installGetCommands(program);
@@ -76,14 +82,14 @@ installVoteCommands(program);
 const client = program.command('client');
 
 client.command('version').action(() => {
-  log.log({
+  log({
     success: true,
     version: packageInfo.version,
   });
 });
 
-program.on('option:passPhrase', () => {
-  config.passPhrase = program.opts().passPhrase;
+program.on('option:passphrase', () => {
+  config.passphrase = program.opts().passphrase;
 });
 
 // output help information on unknown commands
@@ -106,35 +112,7 @@ program.on('--help', () => {
   console.log();
 });
 
-program.commands.forEach((command) =>
-  command.on('--help', () => console.log()),
-);
-
-enhanceErrorMessages(
-  'missingArgument',
-  (argName) => `Missing required argument ${chalk.yellow(`<${argName}>`)}.`,
-);
-
-enhanceErrorMessages('unknownCommand', () => `Unknown command.`);
-
-enhanceErrorMessages(
-  'unknownOption',
-  (optionName) => `Unknown option ${chalk.yellow(optionName)}.`,
-);
-
-enhanceErrorMessages(
-  'optionMissingArgument',
-  (option, flag) =>
-    `Missing required argument for option ${chalk.yellow(option.flags)}${flag ? `, got ${chalk.yellow(flag)}` : ''}`,
-);
-
-const INTERACTIVE_MODE = process.argv.length < 3;
-
 if (INTERACTIVE_MODE) {
-  // enhance common error messages
-
-  program.exitOverride();
-
   prompt(async (command) => {
     try {
       await program.parseAsync(parseShell(command), { from: 'user' });

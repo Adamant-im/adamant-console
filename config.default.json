@@ -1,9 +1,9 @@
 {
-  /** 
+  /**
     The Console will use this ADM passPhrase by default.
     See 'Installing and configuring' in Readme for details.
   **/
-  "passPhrase": "distance expect praise frequent..",
+  "passphrase": "distance expect praise frequent..",
 
   /** Choose 'mainnet' or 'testnet' **/
   "network": "testnet",

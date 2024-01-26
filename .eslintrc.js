@@ -14,5 +14,6 @@ module.exports = {
     'no-console': 'off',
     'no-underscore-dangle': 'off',
     'default-param-last': 'off',
+    'import/extensions': 'always',
   },
 };
