@@ -22,7 +22,7 @@ const configFilePath = path.normalize(`${configDirPath}/${configFileName}`);
 const localConfigFilePath = path.resolve(configFileName);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const defaultConfigFilePath = path.join(__dirname, '../config.default.json');
+const defaultConfigFilePath = path.join(__dirname, '../config.default.jsonc');
 
 function loadConfig(configPath) {
   let parsedConfig = {};
