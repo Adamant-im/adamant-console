@@ -8,9 +8,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: [
-    'airbnb-base',
-  ],
+  extends: ['airbnb-base', 'prettier'],
   rules: {
     'no-restricted-syntax': 'off',
     'no-console': 'off',
