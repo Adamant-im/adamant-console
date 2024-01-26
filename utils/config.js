@@ -13,7 +13,8 @@ const configPathName = '.adm';
 const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.json';
 
 const homeDir = os.homedir();
-const configDirPath = process.env.ADM_CONFIG_PATH || `${homeDir}/${configPathName}`;
+const configDirPath =
+  process.env.ADM_CONFIG_PATH || `${homeDir}/${configPathName}`;
 
 const configFilePath = path.normalize(`${configDirPath}/${configFileName}`);
 const localConfigFilePath = path.resolve(configFileName);
@@ -28,10 +29,12 @@ function loadConfig(configPath) {
 
     parsedConfig = JSON.parse(jsonminify(data));
   } catch (err) {
-    console.log(chalk.red(
-      'Failed to parse the configuration from:\n'
-      + `└── ${chalk.yellow(configPath)}.`,
-    ));
+    console.log(
+      chalk.red(
+        'Failed to parse the configuration from:\n' +
+          `└── ${chalk.yellow(configPath)}.`,
+      ),
+    );
     console.log();
     console.log(err);
     process.exit(1);
@@ -42,10 +45,7 @@ function loadConfig(configPath) {
 
 let config = loadConfig(defaultConfigFilePath);
 
-const configPaths = [
-  configFilePath,
-  localConfigFilePath,
-];
+const configPaths = [configFilePath, localConfigFilePath];
 
 for (const configPath of configPaths) {
   let existingConfigPath;
@@ -55,8 +55,8 @@ for (const configPath of configPaths) {
   if (fs.existsSync(configPath)) {
     existingConfigPath = configPath;
   } else if (
-    !process.env.ADM_CONFIG_FILENAME
-    && fs.existsSync(configWithComments)
+    !process.env.ADM_CONFIG_FILENAME &&
+    fs.existsSync(configWithComments)
   ) {
     existingConfigPath = configWithComments;
   }
@@ -101,8 +101,7 @@ const { error, value } = schema.validate(config, {
 
 if (error) {
   log.error(
-    error.toString()
-      .replace('ValidationError', 'Config validation error'),
+    error.toString().replace('ValidationError', 'Config validation error'),
   );
 }
 

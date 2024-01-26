@@ -19,10 +19,12 @@ const requiredVersion = packageInfo.engines.node;
 
 const checkNodeVersion = (wanted, id) => {
   if (!semver.satisfies(process.version, wanted, { includePrerelease: true })) {
-    console.log(chalk.red(
-      `You are using Node ${process.version}, but this version of ${id}`
-      + ` requires Node ${wanted}.\nPlease upgrade your Node version.`,
-    ));
+    console.log(
+      chalk.red(
+        `You are using Node ${process.version}, but this version of ${id}` +
+          ` requires Node ${wanted}.\nPlease upgrade your Node version.`,
+      ),
+    );
 
     process.exit(1);
   }
@@ -36,7 +38,8 @@ const suggestCommands = (unknownCommand) => {
   let suggestion;
 
   availableCommands.forEach((cmd) => {
-    const isBestMatch = leven(cmd, unknownCommand) < leven(suggestion || '', unknownCommand);
+    const isBestMatch =
+      leven(cmd, unknownCommand) < leven(suggestion || '', unknownCommand);
 
     if (leven(cmd, unknownCommand) < 3 && isBestMatch) {
       suggestion = cmd;
@@ -72,14 +75,12 @@ installVoteCommands(program);
 
 const client = program.command('client');
 
-client
-  .command('version')
-  .action(() => {
-    log.log({
-      success: true,
-      version: packageInfo.version,
-    });
+client.command('version').action(() => {
+  log.log({
+    success: true,
+    version: packageInfo.version,
   });
+});
 
 program.on('option:passPhrase', () => {
   config.passPhrase = program.opts().passPhrase;
@@ -99,25 +100,33 @@ program.on('command:*', ([cmd]) => {
 // add some useful info on help
 program.on('--help', () => {
   console.log();
-  console.log(`  Run ${chalk.cyan('adm <command> --help')} for detailed usage of given command.`);
+  console.log(
+    `  Run ${chalk.cyan('adm <command> --help')} for detailed usage of given command.`,
+  );
   console.log();
 });
 
-program.commands.forEach((command) => command.on('--help', () => console.log()));
+program.commands.forEach((command) =>
+  command.on('--help', () => console.log()),
+);
 
-enhanceErrorMessages('missingArgument', (argName) => (
-  `Missing required argument ${chalk.yellow(`<${argName}>`)}.`
-));
+enhanceErrorMessages(
+  'missingArgument',
+  (argName) => `Missing required argument ${chalk.yellow(`<${argName}>`)}.`,
+);
 
 enhanceErrorMessages('unknownCommand', () => `Unknown command.`);
 
-enhanceErrorMessages('unknownOption', (optionName) => (
-  `Unknown option ${chalk.yellow(optionName)}.`
-));
+enhanceErrorMessages(
+  'unknownOption',
+  (optionName) => `Unknown option ${chalk.yellow(optionName)}.`,
+);
 
-enhanceErrorMessages('optionMissingArgument', (option, flag) => (
-  `Missing required argument for option ${chalk.yellow(option.flags)}${flag ? `, got ${chalk.yellow(flag)}` : ''}`
-));
+enhanceErrorMessages(
+  'optionMissingArgument',
+  (option, flag) =>
+    `Missing required argument for option ${chalk.yellow(option.flags)}${flag ? `, got ${chalk.yellow(flag)}` : ''}`,
+);
 
 const INTERACTIVE_MODE = process.argv.length < 3;
 

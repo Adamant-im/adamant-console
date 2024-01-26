@@ -13,21 +13,18 @@ module.exports = {
     return Uint8Array.from(bytes);
   },
   decodeMessage(msg, ownMessage, privateKey, senderPublicKey) {
-    const message = typeof msg === 'string'
-      ? this.hexToBytes(msg)
-      : msg;
+    const message = typeof msg === 'string' ? this.hexToBytes(msg) : msg;
 
-    const nonce = typeof ownMessage === 'string'
-      ? this.hexToBytes(ownMessage)
-      : ownMessage;
+    const nonce =
+      typeof ownMessage === 'string' ? this.hexToBytes(ownMessage) : ownMessage;
 
-    const senderKey = typeof senderPublicKey === 'string'
-      ? this.hexToBytes(senderPublicKey)
-      : senderPublicKey;
+    const senderKey =
+      typeof senderPublicKey === 'string'
+        ? this.hexToBytes(senderPublicKey)
+        : senderPublicKey;
 
-    const myPrivateKey = typeof privateKey === 'string'
-      ? this.hexToBytes(privateKey)
-      : privateKey;
+    const myPrivateKey =
+      typeof privateKey === 'string' ? this.hexToBytes(privateKey) : privateKey;
 
     const DHPublicKey = ed2curve.convertPublicKey(senderKey);
     const DHSecretKey = ed2curve.convertSecretKey(myPrivateKey);

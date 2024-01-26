@@ -19,12 +19,7 @@ module.exports = {
 
     return crypto
       .createHash('sha256')
-      .update(
-        secretMnemonic
-          .toSeed()
-          .toString('hex'),
-        'hex',
-      )
+      .update(secretMnemonic.toSeed().toString('hex'), 'hex')
       .digest();
   },
   createKeypairFromPassPhrase(passPhrase) {

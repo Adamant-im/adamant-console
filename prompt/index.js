@@ -19,20 +19,14 @@ module.exports = (callback) => {
       const line = history.back(rl.line);
 
       if (line) {
-        rl.write(
-          null,
-          { ctrl: true, name: 'u' },
-        );
+        rl.write(null, { ctrl: true, name: 'u' });
 
         rl.write(line);
       }
     }
 
     if (key.name === 'down') {
-      rl.write(
-        null,
-        { ctrl: true, name: 'u' },
-      );
+      rl.write(null, { ctrl: true, name: 'u' });
 
       rl.write(history.next(rl.line));
     }
