@@ -94,7 +94,7 @@ const schema = Joi.object({
   networks: Joi.object({
     [config.network]: netSchema.required(),
   }),
-  // passPhrase can be set later
+  // passphrase can be set later
   passphrase: Joi.string().allow(''),
 });
 

@@ -1,6 +1,6 @@
 {
   /**
-    The Console will use this ADM passPhrase by default.
+    The Console will use this ADM passphrase by default.
     See 'Installing and configuring' in Readme for details.
   **/
   "passphrase": "distance expect praise frequent..",
