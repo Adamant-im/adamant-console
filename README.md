@@ -4,7 +4,7 @@ Adamant-console is Command-line utilities to interact with ADAMANT blockchain. I
 
 ## Understanding interaction with ADAMANT blockchain
 
-ADAMANT has *only secure API*, and you cannot transfer passphrase to node to make any action with wallet. Instead, node *requires signed transaction* to make any action.
+ADAMANT has _only secure API_, and you cannot transfer passphrase to node to make any action with wallet. Instead, node _requires signed transaction_ to make any action.
 
 Adamant-console connects to ADAMANT nodes on your choice (set in configuration file), it can be any node, locally installed on your machine, or from other side of the Earth. As Console doesn’t transfer passphrases to nodes, it's safe to connect to any node. Node you connect should have [API enabled](https://medium.com/adamant-im/how-to-run-your-adamant-node-on-ubuntu-990e391e8fcc#fe7e).
 

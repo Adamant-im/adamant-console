@@ -8,13 +8,12 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: [
-    'airbnb-base',
-  ],
+  extends: ['airbnb-base', 'prettier'],
   rules: {
     'no-restricted-syntax': 'off',
     'no-console': 'off',
     'no-underscore-dangle': 'off',
     'default-param-last': 'off',
+    'import/extensions': 'always',
   },
 };

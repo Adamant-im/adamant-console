@@ -1,31 +1,30 @@
 const stringify = (obj = {}) => JSON.stringify(obj, null, 2);
 
-module.exports = {
-  log(...args) {
-    const res = Object.assign({}, ...args);
+export const log = (...args) => {
+  const res = Object.assign({}, ...args);
 
-    console.log(stringify(res));
-  },
-  warn(...args) {
-    const output = args.join(' ');
+  console.log(stringify(res));
+};
 
-    this.log({
-      success: false,
-      error: output,
-    });
-  },
-  error(...args) {
-    this.warn(...args);
-  },
-  call(func, ...callArgs) {
-    return async (...args) => {
-      try {
-        const output = await func(...callArgs, ...args);
+export const warn = (...args) => {
+  const output = args.join(' ');
 
-        this.log(output);
-      } catch (error) {
-        this.warn(error);
-      }
-    };
-  },
+  log({
+    success: false,
+    error: output,
+  });
+};
+
+export const error = (...args) => warn(...args);
+
+export const call = (func, ...callArgs) => {
+  return async (...args) => {
+    try {
+      const output = await func(...callArgs, ...args);
+
+      log(output);
+    } catch (error) {
+      warn(error);
+    }
+  };
 };

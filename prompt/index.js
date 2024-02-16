@@ -1,8 +1,8 @@
-const readline = require('readline');
-const History = require('./history');
-const packageInfo = require('../package.json');
+import readline from 'readline';
+import History from './history.js';
+import packageInfo from '../package.json' assert { type: 'json' };
 
-module.exports = (callback) => {
+export default (callback) => {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -19,20 +19,14 @@ module.exports = (callback) => {
       const line = history.back(rl.line);
 
       if (line) {
-        rl.write(
-          null,
-          { ctrl: true, name: 'u' },
-        );
+        rl.write(null, { ctrl: true, name: 'u' });
 
         rl.write(line);
       }
     }
 
     if (key.name === 'down') {
-      rl.write(
-        null,
-        { ctrl: true, name: 'u' },
-      );
+      rl.write(null, { ctrl: true, name: 'u' });
 
       rl.write(history.next(rl.line));
     }
