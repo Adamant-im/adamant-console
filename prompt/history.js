@@ -1,4 +1,4 @@
-class History {
+export default class History {
   constructor() {
     this.history = [];
     this.current = 0;
@@ -38,5 +38,3 @@ class History {
     return this.history[this.current];
   }
 }
-
-module.exports = History;

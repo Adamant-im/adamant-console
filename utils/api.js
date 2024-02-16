@@ -1,19 +1,19 @@
-const adamantApi = require('adamant-api');
-const config = require('./config');
+import { AdamantApi } from 'adamant-api';
+import config from './config.js';
 
 const network = config.networks[config.network];
 
-const node = network.nodes.map(({ ip, protocol, port }) => (
-  `${protocol}://${ip}${port ? `:${port}` : ''}`
-));
+const nodes = network.nodes.map(
+  ({ ip, protocol, port }) => `${protocol}://${ip}${port ? `:${port}` : ''}`,
+);
 
 // Check health in interactive mode
 const checkHealthAtStartup = process.argv.length < 3;
 
-const api = adamantApi({
-  node,
+const api = new AdamantApi({
+  nodes,
   checkHealthAtStartup,
-  logLevel: 'null',
+  logLevel: -1,
 });
 
-module.exports = api;
+export default api;

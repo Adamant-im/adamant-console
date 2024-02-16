@@ -1,8 +1,9 @@
 {
   "name": "adamant-console",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Console API and JSON-RPC for interacting with ADAMANT Blockchain",
   "main": "lib/api/index.js",
+  "type": "module",
   "bin": {
     "adm": "./bin/adamant.js"
   },
@@ -12,6 +13,7 @@
   "author": "ADAMANT Foundation <devs@adamant.im> (https://adamant.im)",
   "license": "GPL-3.0",
   "scripts": {
+    "format": "prettier . --write",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint -f visualstudio .",
     "lint:fix": "npx eslint -f visualstudio --fix"
@@ -25,23 +27,25 @@
   },
   "homepage": "https://github.com/Adamant-im/adamant-console#readme",
   "devDependencies": {
-    "eslint": "^8.16.0",
+    "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0"
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "3.2.4"
   },
   "dependencies": {
-    "@stablelib/utf8": "^1.0.1",
-    "adamant-api": "^1.5.0",
-    "bitcore-mnemonic": "^8.25.28",
-    "chalk": "^4.1.2",
-    "commander": "^9.3.0",
+    "@stablelib/utf8": "^1.0.2",
+    "adamant-api": "^2.3.0",
+    "bitcore-mnemonic": "^10.0.23",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
     "ed2curve": "^0.3.0",
-    "jayson": "^3.6.6",
-    "joi": "^17.6.0",
+    "jayson": "^4.1.0",
+    "joi": "^17.12.0",
     "jsonminify": "^0.4.2",
-    "leven": "^3.1.0",
-    "semver": "^7.3.7",
-    "shell-quote": "^1.7.3",
+    "leven": "^4.0.0",
+    "semver": "^7.5.4",
+    "shell-quote": "^1.8.1",
     "sodium-browserify-tweetnacl": "^0.2.6",
     "tweetnacl": "^1.0.3"
   },
