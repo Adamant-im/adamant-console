@@ -11,8 +11,8 @@ import chalk from 'chalk';
 
 import * as log from './log.js';
 
-const configPathName = '.adm';
-const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.jsonc';
+export const configPathName = '.adm';
+export const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.jsonc';
 
 const homeDir = os.homedir();
 const configDirPath =

@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { configFileName, configPathName } from '../utils/config.js';
+
 const homeDir = os.homedir();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -11,20 +13,20 @@ export default (program) => {
   program
     .command('init')
     .description(
-      'Copies default config file into the given path directory or inside ~/.adm',
+      `Copies default config file into the given path directory or inside ~/${configPathName}`,
     )
     .argument('[path]', 'directory path to copy config into')
-    .action(async (targetDirectory = path.join(homeDir, '.adm')) => {
+    .action(async (targetDirectory = path.join(homeDir, configPathName)) => {
       if (!fs.existsSync(targetDirectory)) {
         fs.mkdirSync(targetDirectory, { recursive: true });
       }
 
       const defaultConfigPath = path.join(__dirname, '../config.default.jsonc');
-      const targetFilePath = path.resolve(targetDirectory, 'config.jsonc');
+      const targetFilePath = path.resolve(targetDirectory, configFileName);
 
       if (fs.existsSync(targetFilePath)) {
         console.error(
-          `Error: The file config.jsonc already exists in ${targetDirectory}. Please remove or rename it.`,
+          `Error: The file ${configFileName} already exists in ${targetDirectory}. Please remove or rename it.`,
         );
         return;
       }
