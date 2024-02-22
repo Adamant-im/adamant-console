@@ -1,22 +1,19 @@
-import os from 'os';
 import fs from 'fs';
-
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { configFileName, configPathName } from '../utils/config.js';
+import { configFileName, configDirPath } from '../utils/config.js';
 
-const homeDir = os.homedir();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default (program) => {
   program
     .command('init')
     .description(
-      `Copies default config file into the given path directory or inside ~/${configPathName}`,
+      `Copies default config file into the given path directory or inside ${configDirPath}`,
     )
     .argument('[path]', 'directory path to copy config into')
-    .action(async (targetDirectory = path.join(homeDir, configPathName)) => {
+    .action(async (targetDirectory = configDirPath) => {
       if (!fs.existsSync(targetDirectory)) {
         fs.mkdirSync(targetDirectory, { recursive: true });
       }
