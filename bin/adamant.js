@@ -14,6 +14,8 @@ import config from '../utils/config.js';
 
 import packageInfo from '../package.json' assert { type: 'json' };
 
+import installInitCommand from './init.js';
+
 import installAccountCommands from '../lib/account.js';
 import installGetCommands from '../lib/get.js';
 import installNodeCommands from '../lib/node.js';
@@ -78,6 +80,7 @@ installSendCommands(program);
 installRpcServerCommands(program);
 installDelegateCommands(program);
 installVoteCommands(program);
+installInitCommand(program);
 
 const client = program.command('client');
 
