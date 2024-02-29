@@ -12,7 +12,9 @@ import prompt from '../prompt/index.js';
 import { log } from '../utils/log.js';
 import config from '../utils/config.js';
 
-import packageInfo from '../package.json' assert { type: 'json' };
+import { packageInfo } from '../utils/package.js';
+
+import installInitCommand from './init.js';
 
 import installAccountCommands from '../lib/account.js';
 import installGetCommands from '../lib/get.js';
@@ -78,6 +80,7 @@ installSendCommands(program);
 installRpcServerCommands(program);
 installDelegateCommands(program);
 installVoteCommands(program);
+installInitCommand(program);
 
 const client = program.command('client');
 
