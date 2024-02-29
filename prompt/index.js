@@ -1,6 +1,6 @@
 import readline from 'readline';
 import History from './history.js';
-import packageInfo from '../package.json' assert { type: 'json' };
+import { packageInfo } from '../utils/package.js';
 
 export default (callback) => {
   const rl = readline.createInterface({
