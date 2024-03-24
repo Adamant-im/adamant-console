@@ -23,7 +23,7 @@ export default (program) => {
 
       if (fs.existsSync(targetFilePath)) {
         console.error(
-          `Error: The file ${configFileName} already exists in ${targetDirectory}. Please remove or rename it.`,
+          `Error: The file ${configFileName} already exists in '${targetDirectory}'. Please remove or rename it.`,
         );
         return;
       }
