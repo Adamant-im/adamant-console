@@ -88,6 +88,9 @@ client.command('version').action(() => {
   log({
     success: true,
     version: packageInfo.version,
+    config: config.configPath,
+    network: config.network,
+    account: config.accountAddress,
   });
 });
 
