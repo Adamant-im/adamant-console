@@ -38,6 +38,7 @@
     "adamant-api": "^2.4.0",
     "bitcore-mnemonic": "^10.0.36",
     "chalk": "^5.3.0",
+    "cli-highlight": "^2.1.11",
     "commander": "^12.1.0",
     "ed2curve": "^0.3.0",
     "jayson": "^4.1.0",

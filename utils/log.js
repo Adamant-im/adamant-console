@@ -1,9 +1,13 @@
+import { highlight } from 'cli-highlight';
+
 const stringify = (obj = {}) => JSON.stringify(obj, null, 2);
 
 export const log = (...args) => {
   const res = Object.assign({}, ...args);
 
-  console.log(stringify(res));
+  console.log(
+    highlight(stringify(res), { language: 'json', ignoreIllegals: true }),
+  );
 };
 
 export const warn = (...args) => {
