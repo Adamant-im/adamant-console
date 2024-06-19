@@ -9,6 +9,11 @@ import Joi from 'joi';
 import jsonminify from 'jsonminify';
 import chalk from 'chalk';
 
+import {
+  createKeypairFromPassphrase,
+  createAddressFromPublicKey,
+} from 'adamant-api';
+
 import * as log from './log.js';
 
 const homeDir = os.homedir();
@@ -68,9 +73,14 @@ for (const configPath of configPaths) {
   if (existingConfigPath) {
     const loadedConfig = loadConfig(existingConfigPath);
 
+    const keypair = createKeypairFromPassphrase(loadedConfig.passphrase);
+    const address = createAddressFromPublicKey(keypair.publicKey);
+
     config = {
       ...config,
       ...loadedConfig,
+      configPath: existingConfigPath,
+      accountAddress: address,
     };
 
     break;

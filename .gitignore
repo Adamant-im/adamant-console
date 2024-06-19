@@ -1,5 +1,6 @@
 # config environment variable files
 config.json
+config.jsonc
 
 # Code editors settings
 .vscode
