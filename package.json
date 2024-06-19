@@ -1,6 +1,6 @@
 {
   "name": "adamant-console",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "description": "Console API and JSON-RPC for interacting with ADAMANT Blockchain",
   "main": "lib/api/index.js",
   "type": "module",
@@ -31,7 +31,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "prettier": "3.3.1"
+    "prettier": "3.3.2"
   },
   "dependencies": {
     "@stablelib/utf8": "^1.0.2",
