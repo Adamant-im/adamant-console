@@ -14,9 +14,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "format": "prettier . --write",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint -f visualstudio .",
-    "lint:fix": "npx eslint -f visualstudio --fix"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -27,25 +25,20 @@
   },
   "homepage": "https://github.com/Adamant-im/adamant-console#readme",
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "prettier": "3.3.2"
+    "prettier": "3.6.2"
   },
   "dependencies": {
-    "@stablelib/utf8": "^1.0.2",
     "adamant-api": "^2.4.0",
-    "bitcore-mnemonic": "^10.0.36",
-    "chalk": "^5.3.0",
-    "commander": "^12.1.0",
+    "bitcore-mnemonic": "^10.10.7",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.1",
     "ed2curve": "^0.3.0",
-    "jayson": "^4.1.0",
-    "joi": "^17.13.1",
+    "jayson": "^4.2.0",
+    "joi": "^18.0.1",
     "jsonminify": "^0.4.2",
-    "leven": "^4.0.0",
-    "semver": "^7.6.2",
-    "shell-quote": "^1.8.1",
+    "leven": "^4.1.0",
+    "semver": "^7.7.2",
+    "shell-quote": "^1.8.3",
     "sodium-browserify-tweetnacl": "^0.2.6",
     "tweetnacl": "^1.0.3"
   },
