@@ -60,8 +60,8 @@ config.jsonc          # User-local config (git-ignored; overrides defaults)
 |---|---|---|
 | CLI (interactive) | `node bin/adamant.js` | REPL with history |
 | CLI (one-shot) | `node bin/adamant.js <command>` | Single command, then exit |
-| JSON-RPC daemon | `node bin/adamant.js rpc` | jayson server on configured port |
-| JS library | `import * from 'adamant-console/lib/api/index.js'` | Programmatic use |
+| JSON-RPC daemon | `node bin/adamant.js rpc server` | jayson server on configured port |
+| JS library | `import * as api from 'adamant-console/lib/api/index.js'` | Programmatic use |
 
 ### Key dependency
 
@@ -73,7 +73,7 @@ config.jsonc          # User-local config (git-ignored; overrides defaults)
 
 - `passphrase` — ADM account passphrase (private; never log or transmit)
 - `network` — `"mainnet"` or `"testnet"`
-- `networks.mainnet.nodes` / `networks.testnet.nodes` — list of ADM node URLs
+- `networks.mainnet.nodes` / `networks.testnet.nodes` — list of node objects with `ip`, `protocol`, and `port` fields (composed into URLs in `utils/api.js`)
 - `rpc.port` — JSON-RPC server port (default `5080`)
 
 **When updating node lists**, refer to the canonical ADM node specification in [`adamant-wallets`](https://github.com/Adamant-im/adamant-wallets) — the `assets/adm/` directory contains the current mainnet and testnet node lists, health-check intervals, and `alt_ip` fallbacks used across all ADAMANT apps.
@@ -93,7 +93,7 @@ node bin/adamant.js get address U123456789
 node bin/adamant.js account new
 
 # Start JSON-RPC daemon
-node bin/adamant.js rpc
+node bin/adamant.js rpc server
 
 # Lint (check)
 npm run lint
