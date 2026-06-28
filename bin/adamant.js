@@ -11,6 +11,7 @@ import prompt from '../prompt/index.js';
 
 import { log } from '../utils/log.js';
 import config from '../utils/config.js';
+import { getClientInfo } from '../utils/client.js';
 
 import { packageInfo } from '../utils/package.js';
 
@@ -98,13 +99,7 @@ installInitCommand(program);
 const client = program.command('client');
 
 client.command('version').action(() => {
-  log({
-    success: true,
-    version: packageInfo.version,
-    config: config.configPath,
-    network: config.network,
-    account: config.accountAddress,
-  });
+  log(getClientInfo());
 });
 
 program.on('option:passphrase', () => {

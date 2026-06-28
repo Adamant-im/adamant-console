@@ -37,7 +37,7 @@ export default class History {
    * @returns {string} Next history entry or the current prompt line
    */
   next(str) {
-    if (this.history.length <= this.current) {
+    if (this.history.length <= this.current + 1) {
       return str;
     }
 

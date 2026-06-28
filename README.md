@@ -12,7 +12,7 @@ Passphrases never need to be sent to a node. Keep passphrases, private keys, dec
 - JSON-RPC server for integration from other languages and services
 - Local ADM account generation, signing, voting, token transfers, and encrypted messages
 - Configurable mainnet/testnet node lists and RPC port
-- Shared ADAMANT protocol behavior through [`adamant-api`](https://github.com/Adamant-im/adamant-api-jsclient)
+- Shared ADAMANT Node API v0.10.0 behavior through [`adamant-api`](https://github.com/Adamant-im/adamant-api-jsclient)
 
 ## Requirements
 
@@ -52,7 +52,7 @@ Important fields:
 
 The default network is `testnet`. Update `network` to `mainnet` only when you intend to use real ADM funds.
 
-When updating ADM node lists, use the canonical metadata in [`adamant-wallets/assets/adm`](https://github.com/Adamant-im/adamant-wallets/tree/master/assets/adm).
+When updating ADM node lists, use the canonical metadata in [`adamant-wallets/assets/general/adamant/info.json`](https://github.com/Adamant-im/adamant-wallets/blob/dev/assets/general/adamant/info.json).
 
 ## CLI Usage
 
@@ -68,10 +68,16 @@ Run one-shot commands:
 node bin/adamant.js client version
 node bin/adamant.js node height
 node bin/adamant.js node version
+node bin/adamant.js node status
 node bin/adamant.js account new
 node bin/adamant.js get address U123456789
 node bin/adamant.js get transaction 123456789
-node bin/adamant.js send tokens U123456789 1
+node bin/adamant.js get transaction 123456789 returnUnconfirmed=1
+node bin/adamant.js get delegate U11651572364276578835
+node bin/adamant.js get chats U123456789 includeDirectTransfers=1
+node bin/adamant.js get chat U123456789 U987654321 returnUnconfirmed=1
+node bin/adamant.js send tokens U123456789 110020030
+node bin/adamant.js send tokens U123456789 1.1ADM
 node bin/adamant.js send message U123456789 "hello"
 node bin/adamant.js vote for +delegatePublicKey
 ```
@@ -106,6 +112,9 @@ The server listens on `config.rpc.port` and exposes methods that match the exist
 - `getAddress`
 - `getBlock`
 - `getBlocks`
+- `getChats`
+- `getChatMessages`
+- `getChatTransactions`
 - `getDelegate`
 - `getMessage`
 - `getTransaction`
@@ -114,6 +123,7 @@ The server listens on `config.rpc.port` and exposes methods that match the exist
 - `getTransactionsInBlockByHeight`
 - `getTransactionsReceivedByAddress`
 - `nodeHeight`
+- `nodeStatus`
 - `nodeVersion`
 - `sendTokens`
 - `sendMessage`
@@ -143,6 +153,8 @@ console.log(result.transactionId);
 ```
 
 Use [`adamant-api`](https://js.docs.adamant.im/) directly for lower-level protocol features, typed DTOs, metadata, WebSocket subscriptions, and advanced transaction handling.
+
+The Console wrappers preserve Node v0.10.0 response fields, including numeric `count`, transaction `timestampMs`, and unconfirmed transaction fields returned with `returnUnconfirmed=1`. Chat query helpers send `includeDirectTransfers`; the deprecated `withoutDirectTransfers` input is accepted only as a compatibility alias and normalized before calling `adamant-api`.
 
 ## Development
 
