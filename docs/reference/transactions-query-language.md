@@ -8,11 +8,14 @@ adm get transactions recipientId=U123456789,limit=10
 adm get transactions 'types=0&orderBy=timestamp:desc&returnUnconfirmed=1'
 ```
 
-Use `,` or `&` to combine query parameters. Prefix a parameter with `and:` or `or:` for explicit logical grouping.
+Use `,` or `&` to combine query parameters. Console uses `adamant-api` v3 transaction-query semantics: top-level transaction filters are combined with AND by default. Prefix filters with `or:` only when you need an OR group. The `and:` prefix is still accepted for compatibility, but it is no longer required for normal multi-filter queries.
 
 ```sh
-adm get transactions 'senderId=U123456789,and:recipientId=U987654321'
+adm get transactions 'senderId=U123456789,recipientId=U987654321'
+adm get transactions 'or:senderId=U123456789,or:recipientId=U987654321'
 ```
+
+Common options such as `limit`, `offset`, `orderBy`, `returnUnconfirmed`, `returnAsset`, `includeDirectTransfers`, and `userId` are passed as request options, not logical filters.
 
 ## Transaction Filters
 
@@ -60,20 +63,22 @@ Transaction type `0` is a token transfer. Transaction type `8` is a chat message
 Transactions involving one address, ordered newest first:
 
 ```sh
-adm get transactions 'inId=U123456789,and:minAmount=1,orderBy=timestamp:desc'
+adm get transactions 'inId=U123456789,minAmount=1,orderBy=timestamp:desc'
 ```
 
 Last token transfer involving one address:
 
 ```sh
-adm get transactions 'inId=U123456789,and:type=0,limit=1,orderBy=timestamp:desc'
+adm get transactions 'inId=U123456789,type=0,limit=1,orderBy=timestamp:desc'
 ```
 
 Transactions in a block sent to a specific recipient:
 
 ```sh
-adm get transactions 'blockId=7917597195203393333,and:recipientId=U123456789,orderBy=timestamp:asc'
+adm get transactions 'blockId=7917597195203393333,recipientId=U123456789,orderBy=timestamp:asc'
 ```
+
+The compatibility form with `and:recipientId` is also accepted and is converted before calling `adamant-api`.
 
 Last 100 transactions sent to one recipient:
 

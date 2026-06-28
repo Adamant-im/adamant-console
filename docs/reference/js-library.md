@@ -1,6 +1,8 @@
-# JS Library Reference
+# JS Wrapper Reference
 
-The package entry point is `lib/api/index.js`.
+`adamant-console` exposes small JavaScript wrappers through `lib/api/index.js`. These wrappers exist to share Console behavior with local scripts and JSON-RPC handlers.
+
+For new JavaScript integrations, [`adamant-api`](https://js.docs.adamant.im/) is usually the better choice. It is the upstream JavaScript API package that Console builds on, and it has broader protocol coverage, typed DTOs, metadata helpers, WebSocket subscriptions, and advanced transaction handling.
 
 ```js
 import {
@@ -10,7 +12,7 @@ import {
 } from 'adamant-console/lib/api/index.js';
 ```
 
-These wrappers are intentionally small. Use [`adamant-api`](https://js.docs.adamant.im/) directly for lower-level protocol features, typed DTOs, metadata, WebSocket subscriptions, and advanced transaction handling.
+Use Console wrappers when you specifically need Console-compatible response handling. Use `adamant-api` directly when you are building an application, service, bot, or reusable JavaScript module.
 
 ## Exports
 

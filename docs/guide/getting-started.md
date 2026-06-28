@@ -1,6 +1,6 @@
 # Getting Started
 
-`adamant-console` is a command-line, JSON-RPC, and lightweight library tool for interacting with the ADAMANT blockchain. It signs ADM transactions locally and submits signed payloads to configured ADAMANT nodes.
+`adamant-console` is a command-line and JSON-RPC tool for interacting with the ADAMANT blockchain. It signs ADM transactions locally and submits signed payloads to configured ADAMANT nodes.
 
 Use Console when you need to:
 
@@ -8,7 +8,6 @@ Use Console when you need to:
 - Send ADM, messages, rich messages, and signal messages
 - Register delegates and vote for delegates
 - Expose Console behavior through a local JSON-RPC server
-- Import small Node.js API wrappers from scripts
 
 ## Requirements
 
@@ -65,15 +64,6 @@ JSON-RPC daemon:
 
 ```sh
 node bin/adamant.js rpc server
-```
-
-JavaScript library:
-
-```js
-import { getNodeHeight } from 'adamant-console/lib/api/index.js';
-
-const height = await getNodeHeight();
-console.log(height);
 ```
 
 ## Next Steps

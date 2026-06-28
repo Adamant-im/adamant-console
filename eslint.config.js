@@ -13,6 +13,7 @@ export default [
   {
     ignores: [
       'node_modules/**',
+      'docs/.vitepress/cache/**',
       'docs/.vitepress/dist/**',
       'docs/reference/api/**',
     ],

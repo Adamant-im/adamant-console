@@ -11,8 +11,7 @@ const apiSidebar = fs.existsSync(apiSidebarPath)
 
 export default defineConfig({
   title: 'ADAMANT Console',
-  description:
-    'CLI, JSON-RPC, and lightweight JavaScript library docs for ADAMANT Console',
+  description: 'CLI and JSON-RPC docs for ADAMANT Console',
   lang: 'en-US',
   cleanUrls: true,
   metaChunk: true,
@@ -51,7 +50,7 @@ export default defineConfig({
             link: '/reference/json-answer-formats',
           },
           { text: 'JSON-RPC', link: '/reference/json-rpc' },
-          { text: 'JS Library', link: '/reference/js-library' },
+          { text: 'JS Wrappers', link: '/reference/js-library' },
           ...apiSidebar,
         ],
       },

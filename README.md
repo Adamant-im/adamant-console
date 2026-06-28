@@ -1,6 +1,6 @@
 # ADAMANT Console
 
-`adamant-console` is a command-line, JSON-RPC, and lightweight library tool for interacting with the ADAMANT blockchain. It signs ADM transactions locally and submits signed payloads to configured ADAMANT nodes.
+`adamant-console` is a command-line and JSON-RPC tool for interacting with the ADAMANT blockchain. It signs ADM transactions locally and submits signed payloads to configured ADAMANT nodes.
 
 Passphrases never need to be sent to a node. Keep passphrases, private keys, decrypted messages, and local config files out of logs and shared terminals.
 
@@ -10,7 +10,6 @@ Full Console documentation is published at [console.docs.adamant.im](https://con
 
 - Interactive `adm` prompt for common account, node, send, get, delegate, and vote commands
 - One-shot CLI commands for scripts and operations
-- Library entry point for Node.js consumers
 - JSON-RPC server for integration from other languages and services
 - Local ADM account generation, signing, voting, token transfers, and encrypted messages
 - Configurable mainnet/testnet node lists and RPC port
@@ -149,26 +148,9 @@ The server listens on `config.rpc.port` and exposes methods that match the exist
 
 Array-style methods accept JSON-RPC `params` as an array. Template-style send and vote methods accept named object parameters.
 
-## Library Usage
+## JavaScript Integrations
 
-Import the lightweight API wrappers from Node.js:
-
-```js
-import { getNodeHeight, sendMessage } from 'adamant-console/lib/api/index.js';
-
-const height = await getNodeHeight();
-console.log(height);
-
-const result = await sendMessage(
-  'U123456789',
-  'hello',
-  undefined,
-  'local passphrase',
-);
-console.log(result.transactionId);
-```
-
-Use [`adamant-api`](https://js.docs.adamant.im/) directly for lower-level protocol features, typed DTOs, metadata, WebSocket subscriptions, and advanced transaction handling.
+Console is built on [`adamant-api`](https://js.docs.adamant.im/). Use `adamant-api` directly for programmatic JavaScript access, lower-level protocol features, typed DTOs, metadata, WebSocket subscriptions, and advanced transaction handling.
 
 The Console wrappers preserve Node v0.10.0 response fields, including numeric `count`, transaction `timestampMs`, and unconfirmed transaction fields returned with `returnUnconfirmed=1`. Chat query helpers send `includeDirectTransfers`; the deprecated `withoutDirectTransfers` input is accepted only as a compatibility alias and normalized before calling `adamant-api`.
 
@@ -190,7 +172,7 @@ Useful scripts:
 | `npm run format`       | Format repository files with Prettier       |
 | `npm run format:check` | Check Prettier formatting                   |
 | `npm test`             | Run Node.js test discovery                  |
-| `npm run docs:api`     | Generate the library API reference          |
+| `npm run docs:api`     | Generate the Console API reference          |
 | `npm run docs:dev`     | Generate API docs and run VitePress locally |
 | `npm run docs:build`   | Generate API docs and build the docs site   |
 | `npm run docs:preview` | Preview the built docs site after a build   |
@@ -220,7 +202,7 @@ This project intentionally stays small. Prefer focused changes over framework mi
 - [ADAMANT wallet metadata](https://github.com/Adamant-im/adamant-wallets)
 - [ADAMANT blockchain explorer](https://explorer.adamant.im/)
 - [Console issues](https://github.com/Adamant-im/adamant-console/issues)
-- [Historical Console wiki](https://github.com/Adamant-im/adamant-console/wiki)
+- [Frozen historical Console wiki](https://github.com/Adamant-im/adamant-console/wiki)
 
 ## License
 

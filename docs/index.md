@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: ADAMANT Console
-  text: CLI, JSON-RPC, and JavaScript library for ADAMANT
+  text: CLI and JSON-RPC tool for ADAMANT
   tagline: Sign transactions locally, inspect ADAMANT nodes, and automate Console workflows without moving passphrases off your machine.
   actions:
     - theme: brand
@@ -12,19 +12,40 @@ hero:
     - theme: alt
       text: CLI Reference
       link: /reference/cli
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/Adamant-im/adamant-console
 
 features:
   - title: Local signing
     details: Account passphrases stay local while signed payloads are submitted to configured ADAMANT nodes.
-  - title: Multiple usage modes
-    details: Use the interactive prompt, one-shot CLI commands, JSON-RPC daemon, or lightweight Node.js library entry point.
-  - title: Repository-owned docs
-    details: Guides and references live with the code, build in CI, and deploy to GitHub Pages.
+    link: /guide/security
+    linkText: Security guide
+  - title: CLI workflows
+    details: Use the interactive prompt or one-shot commands for account, node, send, get, delegate, and vote operations.
+    link: /reference/cli
+    linkText: CLI reference
+  - title: Configuration
+    details: Configure passphrase storage, mainnet/testnet nodes, and the local JSON-RPC port from JSONC files.
+    link: /guide/configuration
+    linkText: Configuration guide
+  - title: JSON-RPC daemon
+    details: Expose Console commands through a local JSON-RPC server for automation from other tools and languages.
+    link: /reference/json-rpc
+    linkText: JSON-RPC reference
+  - title: Transaction queries
+    details: Filter transaction history with Console query fragments backed by adamant-api v3 query normalization.
+    link: /reference/transactions-query-language
+    linkText: Query language
+  - title: JSON answers
+    details: Read the response shapes returned by CLI and JSON-RPC commands before wiring Console into scripts.
+    link: /reference/json-answer-formats
+    linkText: JSON answer formats
 ---
 
 ## Documentation Scope
 
-These docs cover `adamant-console` behavior: commands, config, JSON-RPC methods, and exported JavaScript helpers. Protocol-level concepts, node endpoints, account formats, and blockchain rules remain in the umbrella [ADAMANT documentation](https://docs.adamant.im/).
+These docs cover `adamant-console` behavior: commands, config, JSON-RPC methods, and Console-specific response handling. Protocol-level concepts, node endpoints, account formats, and blockchain rules remain in the umbrella [ADAMANT documentation](https://docs.adamant.im/). For programmatic JavaScript integrations, use [ADAMANT JavaScript API](https://js.docs.adamant.im/).
 
 ## Quick Links
 
@@ -34,5 +55,5 @@ These docs cover `adamant-console` behavior: commands, config, JSON-RPC methods,
 - [Filter transactions](./reference/transactions-query-language.md)
 - [Read JSON answer formats](./reference/json-answer-formats.md)
 - [Run JSON-RPC](./reference/json-rpc.md)
-- [Use the JS library](./reference/js-library.md)
+- [Use Console JS wrappers](./reference/js-library.md)
 - [Generated API reference](./reference/api/index.md)
