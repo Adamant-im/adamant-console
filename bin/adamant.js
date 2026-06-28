@@ -85,6 +85,7 @@ program
   .name('adm')
   .version(`adm ${packageInfo.version}`)
   .usage('<type> <command> [options]')
+  .showHelpAfterError()
   .option('-p, --passphrase <phrase>', 'account passphrase');
 
 installAccountCommands(program);
