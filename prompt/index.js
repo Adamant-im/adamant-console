@@ -2,6 +2,12 @@ import readline from 'readline';
 import History from './history.js';
 import { packageInfo } from '../utils/package.js';
 
+/**
+ * Starts the interactive ADM prompt and dispatches entered lines to a command handler.
+ *
+ * @param {(line: string) => Promise<void>} callback Handler that receives a complete prompt line
+ * @returns {void}
+ */
 export default (callback) => {
   const rl = readline.createInterface({
     input: process.stdin,

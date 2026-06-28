@@ -1,22 +1,23 @@
 {
   "name": "adamant-console",
-  "version": "3.0.0",
-  "description": "Console API and JSON-RPC for interacting with ADAMANT Blockchain",
+  "version": "4.0.0",
+  "description": "Command-line, JSON-RPC, and lightweight library tools for interacting with the ADAMANT blockchain",
   "main": "lib/api/index.js",
   "type": "module",
   "bin": {
     "adm": "./bin/adamant.js"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=22.13.0"
   },
-  "author": "ADAMANT Foundation <devs@adamant.im> (https://adamant.im)",
+  "author": "ADAMANT community developers <devs@adamant.im>, ADAMANT Foundation <devs@adamant.im>, ADAMANT Tech Labs <devs@adamant.im>",
   "license": "GPL-3.0",
   "scripts": {
     "format": "prettier . --write",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint -f visualstudio .",
-    "lint:fix": "npx eslint -f visualstudio --fix"
+    "format:check": "prettier . --check",
+    "test": "node --test",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -26,40 +27,58 @@
     "url": "https://github.com/Adamant-im/adamant-console/issues"
   },
   "homepage": "https://github.com/Adamant-im/adamant-console#readme",
+  "links": {
+    "website": "https://adamant.im/",
+    "docs": "https://docs.adamant.im/",
+    "aips": "https://aips.adamant.im/all",
+    "node": "https://github.com/Adamant-im/adamant",
+    "schema": "https://schema.adamant.im/",
+    "apiClient": "https://js.docs.adamant.im/"
+  },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "prettier": "3.3.2"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "3.9.1"
   },
   "dependencies": {
-    "@stablelib/utf8": "^1.0.2",
-    "adamant-api": "^2.4.0",
-    "bitcore-mnemonic": "^10.0.36",
-    "chalk": "^5.3.0",
-    "commander": "^12.1.0",
-    "ed2curve": "^0.3.0",
-    "jayson": "^4.1.0",
-    "joi": "^17.13.1",
+    "adamant-api": "^3.0.0",
+    "chalk": "^5.6.2",
+    "commander": "^15.0.0",
+    "jayson": "^4.3.0",
+    "joi": "^18.2.3",
     "jsonminify": "^0.4.2",
-    "leven": "^4.0.0",
-    "semver": "^7.6.2",
-    "shell-quote": "^1.8.1",
-    "sodium-browserify-tweetnacl": "^0.2.6",
-    "tweetnacl": "^1.0.3"
+    "leven": "^4.1.0",
+    "semver": "^7.8.5",
+    "shell-quote": "^1.9.0"
+  },
+  "overrides": {
+    "uuid": "11.1.1",
+    "jayson": {
+      "ws": "7.5.11"
+    }
   },
   "keywords": [
     "adm",
     "adamant",
+    "adamant-console",
+    "adamant-cli",
+    "adamant-rpc",
     "blockchain",
     "messenger",
+    "messaging",
     "wallet",
+    "decentralization",
+    "privacy",
     "secure",
+    "security",
     "encryption",
     "crypto",
     "cryptocurrency",
-    "CLI",
-    "console"
+    "dpos",
+    "cli",
+    "console",
+    "json-rpc",
+    "nodejs"
   ]
 }
