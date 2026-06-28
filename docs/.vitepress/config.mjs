@@ -18,7 +18,10 @@ export default defineConfig({
   sitemap: {
     hostname: 'https://console.docs.adamant.im',
   },
-  head: [['meta', { name: 'theme-color', content: '#1f7a64' }]],
+  head: [
+    ['meta', { name: 'theme-color', content: '#1f7a64' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+  ],
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: 'ADAMANT Console',
