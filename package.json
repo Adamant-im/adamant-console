@@ -1,6 +1,6 @@
 {
   "name": "adamant-console",
-  "version": "4.0.0",
+  "version": "3.1.0",
   "description": "Command-line, JSON-RPC, and lightweight library tools for interacting with the ADAMANT blockchain",
   "main": "lib/api/index.js",
   "type": "module",
