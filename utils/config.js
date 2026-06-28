@@ -1,5 +1,3 @@
-/* eslint-disable import/no-dynamic-require */
-
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
@@ -20,7 +18,18 @@ const homeDir = os.homedir();
 
 const configPathName = '.adm';
 
+/**
+ * Config filename loaded from the ADM config directory or current working directory.
+ *
+ * @type {string}
+ */
 export const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.jsonc';
+
+/**
+ * Directory containing the user-level ADM Console config.
+ *
+ * @type {string}
+ */
 export const configDirPath =
   process.env.ADM_CONFIG_PATH || `${homeDir}/${configPathName}`;
 
@@ -30,6 +39,12 @@ const localConfigFilePath = path.resolve(configFileName);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const defaultConfigFilePath = path.join(__dirname, '../config.default.jsonc');
 
+/**
+ * Reads and parses a JSONC configuration file.
+ *
+ * @param {string} configPath Absolute or relative path to a JSONC config file
+ * @returns {object} Parsed configuration object
+ */
 function loadConfig(configPath) {
   let parsedConfig = {};
 

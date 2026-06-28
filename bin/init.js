@@ -6,6 +6,12 @@ import { configFileName, configDirPath } from '../utils/config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+/**
+ * Registers the `init` command that copies the default config into a target directory.
+ *
+ * @param {import('commander').Command} program Commander program or subcommand
+ * @returns {void}
+ */
 export default (program) => {
   program
     .command('init')

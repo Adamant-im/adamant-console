@@ -32,6 +32,13 @@ if (INTERACTIVE_MODE) {
 
 const requiredVersion = packageInfo.engines.node;
 
+/**
+ * Ensures the current Node.js runtime satisfies the package engine range.
+ *
+ * @param {string} wanted Supported semver range from package metadata
+ * @param {string} id Package name shown in the error message
+ * @returns {void}
+ */
 const checkNodeVersion = (wanted, id) => {
   if (!satisfies(process.version, wanted, { includePrerelease: true })) {
     console.log(
@@ -47,8 +54,14 @@ const checkNodeVersion = (wanted, id) => {
 
 checkNodeVersion(requiredVersion, 'adamant-console');
 
+/**
+ * Prints a close command name when Commander reports an unknown command.
+ *
+ * @param {string} unknownCommand Command entered by the user
+ * @returns {void}
+ */
 const suggestCommands = (unknownCommand) => {
-  const availableCommands = program.commands.map((cmd) => cmd._name);
+  const availableCommands = program.commands.map((cmd) => cmd.name());
 
   let suggestion;
 
