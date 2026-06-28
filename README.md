@@ -4,6 +4,8 @@
 
 Passphrases never need to be sent to a node. Keep passphrases, private keys, decrypted messages, and local config files out of logs and shared terminals.
 
+Full Console documentation is published at [console.docs.adamant.im](https://console.docs.adamant.im/).
+
 ## Features
 
 - Interactive `adm` prompt for common account, node, send, get, delegate, and vote commands
@@ -181,13 +183,17 @@ npm test
 
 Useful scripts:
 
-| Script                 | Purpose                                  |
-| ---------------------- | ---------------------------------------- |
-| `npm run lint`         | Check JavaScript with ESLint flat config |
-| `npm run lint:fix`     | Apply safe ESLint fixes                  |
-| `npm run format`       | Format repository files with Prettier    |
-| `npm run format:check` | Check Prettier formatting                |
-| `npm test`             | Run Node.js test discovery               |
+| Script                 | Purpose                                     |
+| ---------------------- | ------------------------------------------- |
+| `npm run lint`         | Check JavaScript with ESLint flat config    |
+| `npm run lint:fix`     | Apply safe ESLint fixes                     |
+| `npm run format`       | Format repository files with Prettier       |
+| `npm run format:check` | Check Prettier formatting                   |
+| `npm test`             | Run Node.js test discovery                  |
+| `npm run docs:api`     | Generate the library API reference          |
+| `npm run docs:dev`     | Generate API docs and run VitePress locally |
+| `npm run docs:build`   | Generate API docs and build the docs site   |
+| `npm run docs:preview` | Preview the built docs site after a build   |
 
 This project intentionally stays small. Prefer focused changes over framework migrations, and keep CLI command names, JSON-RPC method names, config fields, and library exports stable unless a task explicitly approves a breaking change.
 
@@ -202,6 +208,7 @@ This project intentionally stays small. Prefer focused changes over framework mi
 ## Links
 
 - [ADAMANT website](https://adamant.im/)
+- [ADAMANT Console docs](https://console.docs.adamant.im/)
 - [ADAMANT documentation](https://docs.adamant.im/)
 - [ADAMANT Improvement Proposals](https://aips.adamant.im/all)
 - [AIPs source](https://github.com/Adamant-im/AIPs)
@@ -213,7 +220,7 @@ This project intentionally stays small. Prefer focused changes over framework mi
 - [ADAMANT wallet metadata](https://github.com/Adamant-im/adamant-wallets)
 - [ADAMANT blockchain explorer](https://explorer.adamant.im/)
 - [Console issues](https://github.com/Adamant-im/adamant-console/issues)
-- [Console wiki](https://github.com/Adamant-im/adamant-console/wiki)
+- [Historical Console wiki](https://github.com/Adamant-im/adamant-console/wiki)
 
 ## License
 

@@ -16,6 +16,10 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "test": "node --test",
+    "docs:api": "typedoc",
+    "docs:dev": "npm run docs:api && vitepress dev docs",
+    "docs:build": "npm run docs:api && vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -26,10 +30,11 @@
   "bugs": {
     "url": "https://github.com/Adamant-im/adamant-console/issues"
   },
-  "homepage": "https://github.com/Adamant-im/adamant-console#readme",
+  "homepage": "https://console.docs.adamant.im/",
   "links": {
     "website": "https://adamant.im/",
     "docs": "https://docs.adamant.im/",
+    "consoleDocs": "https://console.docs.adamant.im/",
     "aips": "https://aips.adamant.im/all",
     "node": "https://github.com/Adamant-im/adamant",
     "schema": "https://schema.adamant.im/",
@@ -39,7 +44,11 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
-    "prettier": "3.9.1"
+    "prettier": "3.9.1",
+    "typedoc": "^0.28.19",
+    "typedoc-plugin-markdown": "^4.12.0",
+    "typedoc-vitepress-theme": "^1.1.3",
+    "vitepress": "^2.0.0-alpha.17"
   },
   "dependencies": {
     "adamant-api": "^3.0.0",

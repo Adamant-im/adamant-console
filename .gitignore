@@ -30,5 +30,10 @@ node_modules/
 # Optional eslint cache
 .eslintcache
 
+# Generated docs
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+docs/reference/api/
+
 # ai
 .ai-ignored/
