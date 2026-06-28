@@ -21,7 +21,7 @@ export const log = (...args) => {
 /**
  * Writes an error response to stdout using the Console JSON shape.
  *
- * @param {...string} args Error message fragments
+ * @param {...unknown} args Error message fragments or Error objects
  * @returns {void}
  */
 export const warn = (...args) => {
@@ -36,7 +36,7 @@ export const warn = (...args) => {
 /**
  * Alias for `warn` kept for callers that prefer error terminology.
  *
- * @param {...string} args Error message fragments
+ * @param {...unknown} args Error message fragments or Error objects
  * @returns {void}
  */
 export const error = (...args) => warn(...args);
