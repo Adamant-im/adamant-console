@@ -96,6 +96,20 @@ adm --passphrase "your local passphrase" send tokens U123456789 1
 
 Avoid shell history exposure when using passphrase flags in shared environments.
 
+### Startup Health Check
+
+Interactive mode checks configured node health before the first command, so users can see node availability early:
+
+```sh
+node bin/adamant.js
+```
+
+One-shot commands skip this startup check. To disable it explicitly, set:
+
+```sh
+ADM_CHECK_HEALTH_AT_STARTUP=0 node bin/adamant.js
+```
+
 ## JSON-RPC Usage
 
 Start the JSON-RPC server:
