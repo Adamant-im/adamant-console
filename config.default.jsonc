@@ -18,9 +18,19 @@
     "testnet": {
       "nodes": [
         {
-          "ip": "127.0.0.1",
+          "ip": "testnode1.adamant.im",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "81.0.247.181",
           "protocol": "http",
           "port": 36667
+        },
+        {
+          "ip": "testnode3.adm.im",
+          "protocol": "https",
+          "port": ""
         }
       ]
     },
@@ -40,6 +50,16 @@
           "ip": "endless.adamant.im",
           "protocol": "https",
           "port": ""
+        },
+        {
+          "ip": "bid.adamant.im",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "184.94.215.92",
+          "protocol": "http",
+          "port": 45555
         }
       ]
     }

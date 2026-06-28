@@ -11,6 +11,8 @@ import prompt from '../prompt/index.js';
 
 import { log } from '../utils/log.js';
 import config from '../utils/config.js';
+import { getClientInfo } from '../utils/client.js';
+import { addHelp } from '../utils/help.js';
 
 import { packageInfo } from '../utils/package.js';
 
@@ -84,6 +86,7 @@ program
   .name('adm')
   .version(`adm ${packageInfo.version}`)
   .usage('<type> <command> [options]')
+  .showHelpAfterError()
   .option('-p, --passphrase <phrase>', 'account passphrase');
 
 installAccountCommands(program);
@@ -95,17 +98,19 @@ installDelegateCommands(program);
 installVoteCommands(program);
 installInitCommand(program);
 
-const client = program.command('client');
+const client = program.command('client').description('inspect Console client');
 
-client.command('version').action(() => {
-  log({
-    success: true,
-    version: packageInfo.version,
-    config: config.configPath,
-    network: config.network,
-    account: config.accountAddress,
+addHelp(
+  client.command('version'),
+  `
+Examples:
+  $ adm client version
+`,
+)
+  .description('prints Console version and effective local configuration')
+  .action(() => {
+    log(getClientInfo());
   });
-});
 
 program.on('option:passphrase', () => {
   config.passphrase = program.opts().passphrase;

@@ -8,7 +8,10 @@ const nodes = network.nodes.map(
 );
 
 // Interactive mode can surface node availability before the first command runs.
-const checkHealthAtStartup = process.argv.length < 3;
+const checkHealthAtStartup =
+  process.argv.length < 3 &&
+  !process.env.NODE_TEST_CONTEXT &&
+  process.env.ADM_CHECK_HEALTH_AT_STARTUP !== '0';
 
 /**
  * Shared ADAMANT SDK instance configured from local Console settings.

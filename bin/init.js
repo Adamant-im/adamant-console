@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { configFileName, configDirPath } from '../utils/config.js';
+import { addHelp } from '../utils/help.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,8 +14,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @returns {void}
  */
 export default (program) => {
-  program
-    .command('init')
+  addHelp(
+    program.command('init'),
+    `
+Examples:
+  $ adm init
+  $ adm init ./adm-config
+`,
+  )
     .description(
       `Copies default config file into the given path directory or inside ${configDirPath}`,
     )
