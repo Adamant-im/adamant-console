@@ -118,6 +118,12 @@ test('queryStringToObject normalizes deprecated direct-transfer filters', () => 
   );
 });
 
+test('queryStringToObject preserves malformed deprecated direct-transfer values', () => {
+  assert.deepEqual(queryStringToObject(['withoutDirectTransfers=yes']), {
+    includeDirectTransfers: 'yes',
+  });
+});
+
 test('read wrappers pass Node v0.10 query parameters through', async () => {
   const calls = [];
 

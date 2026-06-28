@@ -39,7 +39,10 @@ test('nested commands show command help after argument errors', (t) => {
   assert.match(output, /Query:/);
   assert.match(output, /Examples:/);
   assert.match(output, /adm get transactions senderId=U123456789/);
-  assert.match(output, /returnUnconfirmed=1/);
+  assert.match(
+    output,
+    /adm get transactions 'types=0&orderBy=timestamp:desc&returnUnconfirmed=1'/,
+  );
   assert.match(output, /Options:/);
 });
 
