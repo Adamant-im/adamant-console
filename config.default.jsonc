@@ -57,11 +57,6 @@
           "port": ""
         },
         {
-          "ip": "debate.adamant.im",
-          "protocol": "https",
-          "port": ""
-        },
-        {
           "ip": "184.94.215.92",
           "protocol": "http",
           "port": 45555

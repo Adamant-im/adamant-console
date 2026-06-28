@@ -12,6 +12,7 @@ import prompt from '../prompt/index.js';
 import { log } from '../utils/log.js';
 import config from '../utils/config.js';
 import { getClientInfo } from '../utils/client.js';
+import { addHelp } from '../utils/help.js';
 
 import { packageInfo } from '../utils/package.js';
 
@@ -97,11 +98,19 @@ installDelegateCommands(program);
 installVoteCommands(program);
 installInitCommand(program);
 
-const client = program.command('client');
+const client = program.command('client').description('inspect Console client');
 
-client.command('version').action(() => {
-  log(getClientInfo());
-});
+addHelp(
+  client.command('version'),
+  `
+Examples:
+  $ adm client version
+`,
+)
+  .description('prints Console version and effective local configuration')
+  .action(() => {
+    log(getClientInfo());
+  });
 
 program.on('option:passphrase', () => {
   config.passphrase = program.opts().passphrase;
