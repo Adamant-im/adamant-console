@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 /**
  * Formats an object as pretty JSON.
  *
@@ -7,7 +9,42 @@
 const stringify = (obj = {}) => JSON.stringify(obj, null, 2);
 
 /**
- * Writes merged objects as pretty JSON to stdout.
+ * Matches the syntactic tokens of pretty-printed JSON: a string (optionally a
+ * key when followed by a colon), a boolean, `null`, or a number.
+ */
+const JSON_TOKEN =
+  /("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false)\b|\bnull\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g;
+
+/**
+ * Colorizes a pretty-printed JSON string for terminal output.
+ *
+ * Coloring is applied per token (keys, strings, numbers, booleans, `null`); the
+ * JSON payload itself is unchanged. When stdout is not a TTY or color is
+ * disabled (e.g. `NO_COLOR`), `chalk` emits no escape codes, so piped or
+ * redirected output stays plain and machine-parseable.
+ *
+ * @param {string} json Pretty JSON produced by `stringify`
+ * @returns {string} The same JSON with ANSI color codes added where applicable
+ */
+const highlight = (json) =>
+  json.replace(JSON_TOKEN, (match, str, colon, bool, num) => {
+    if (str !== undefined) {
+      return colon !== undefined ? chalk.cyan(str) + colon : chalk.green(str);
+    }
+
+    if (bool !== undefined) {
+      return chalk.yellow(bool);
+    }
+
+    if (num !== undefined) {
+      return chalk.magenta(num);
+    }
+
+    return chalk.gray(match);
+  });
+
+/**
+ * Writes merged objects as pretty, syntax-highlighted JSON to stdout.
  *
  * @param {...object} args Objects to merge into one JSON response
  * @returns {void}
@@ -15,7 +52,7 @@ const stringify = (obj = {}) => JSON.stringify(obj, null, 2);
 export const log = (...args) => {
   const res = Object.assign({}, ...args);
 
-  console.log(stringify(res));
+  console.log(highlight(stringify(res)));
 };
 
 /**
