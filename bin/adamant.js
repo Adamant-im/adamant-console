@@ -11,6 +11,8 @@ import prompt from '../prompt/index.js';
 
 import { log } from '../utils/log.js';
 import config from '../utils/config.js';
+import { getClientInfo } from '../utils/client.js';
+import { addHelp } from '../utils/help.js';
 
 import { packageInfo } from '../utils/package.js';
 
@@ -32,6 +34,13 @@ if (INTERACTIVE_MODE) {
 
 const requiredVersion = packageInfo.engines.node;
 
+/**
+ * Ensures the current Node.js runtime satisfies the package engine range.
+ *
+ * @param {string} wanted Supported semver range from package metadata
+ * @param {string} id Package name shown in the error message
+ * @returns {void}
+ */
 const checkNodeVersion = (wanted, id) => {
   if (!satisfies(process.version, wanted, { includePrerelease: true })) {
     console.log(
@@ -47,8 +56,14 @@ const checkNodeVersion = (wanted, id) => {
 
 checkNodeVersion(requiredVersion, 'adamant-console');
 
+/**
+ * Prints a close command name when Commander reports an unknown command.
+ *
+ * @param {string} unknownCommand Command entered by the user
+ * @returns {void}
+ */
 const suggestCommands = (unknownCommand) => {
-  const availableCommands = program.commands.map((cmd) => cmd._name);
+  const availableCommands = program.commands.map((cmd) => cmd.name());
 
   let suggestion;
 
@@ -71,6 +86,7 @@ program
   .name('adm')
   .version(`adm ${packageInfo.version}`)
   .usage('<type> <command> [options]')
+  .showHelpAfterError()
   .option('-p, --passphrase <phrase>', 'account passphrase');
 
 installAccountCommands(program);
@@ -82,17 +98,19 @@ installDelegateCommands(program);
 installVoteCommands(program);
 installInitCommand(program);
 
-const client = program.command('client');
+const client = program.command('client').description('inspect Console client');
 
-client.command('version').action(() => {
-  log({
-    success: true,
-    version: packageInfo.version,
-    config: config.configPath,
-    network: config.network,
-    account: config.accountAddress,
+addHelp(
+  client.command('version'),
+  `
+Examples:
+  $ adm client version
+`,
+)
+  .description('prints Console version and effective local configuration')
+  .action(() => {
+    log(getClientInfo());
   });
-});
 
 program.on('option:passphrase', () => {
   config.passphrase = program.opts().passphrase;

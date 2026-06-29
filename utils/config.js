@@ -1,5 +1,3 @@
-/* eslint-disable import/no-dynamic-require */
-
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
@@ -20,7 +18,18 @@ const homeDir = os.homedir();
 
 const configPathName = '.adm';
 
+/**
+ * Config filename loaded from the ADM config directory or current working directory.
+ *
+ * @type {string}
+ */
 export const configFileName = process.env.ADM_CONFIG_FILENAME || 'config.jsonc';
+
+/**
+ * Directory containing the user-level ADM Console config.
+ *
+ * @type {string}
+ */
 export const configDirPath =
   process.env.ADM_CONFIG_PATH || `${homeDir}/${configPathName}`;
 
@@ -28,8 +37,19 @@ const configFilePath = path.normalize(`${configDirPath}/${configFileName}`);
 const localConfigFilePath = path.resolve(configFileName);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const defaultConfigFilePath = path.join(__dirname, '../config.default.jsonc');
+export const defaultConfigFilePath = path.join(
+  __dirname,
+  '../config.default.jsonc',
+);
 
+const unsetAccountLabel = 'Not set';
+
+/**
+ * Reads and parses a JSONC configuration file.
+ *
+ * @param {string} configPath Absolute or relative path to a JSONC config file
+ * @returns {object} Parsed configuration object
+ */
 function loadConfig(configPath) {
   let parsedConfig = {};
 
@@ -52,7 +72,27 @@ function loadConfig(configPath) {
   return parsedConfig;
 }
 
-let config = loadConfig(defaultConfigFilePath);
+/**
+ * Returns whether a passphrase was intentionally configured by the user.
+ *
+ * @param {unknown} passphrase Configured passphrase value
+ * @returns {boolean} True when the value can be used to derive an account
+ */
+export function hasConfiguredPassphrase(passphrase) {
+  return (
+    typeof passphrase === 'string' &&
+    passphrase.trim() !== '' &&
+    passphrase !== defaultConfig.passphrase
+  );
+}
+
+const defaultConfig = loadConfig(defaultConfigFilePath);
+
+let config = {
+  ...defaultConfig,
+  configPath: defaultConfigFilePath,
+  accountAddress: unsetAccountLabel,
+};
 
 const configPaths = [configFilePath, localConfigFilePath];
 
@@ -72,16 +112,22 @@ for (const configPath of configPaths) {
 
   if (existingConfigPath) {
     const loadedConfig = loadConfig(existingConfigPath);
-
-    const keypair = createKeypairFromPassphrase(loadedConfig.passphrase);
-    const address = createAddressFromPublicKey(keypair.publicKey);
-
-    config = {
+    const mergedConfig = {
       ...config,
       ...loadedConfig,
       configPath: existingConfigPath,
-      accountAddress: address,
+      accountAddress: unsetAccountLabel,
     };
+
+    if (hasConfiguredPassphrase(mergedConfig.passphrase)) {
+      const keypair = createKeypairFromPassphrase(mergedConfig.passphrase);
+
+      mergedConfig.accountAddress = createAddressFromPublicKey(
+        keypair.publicKey,
+      );
+    }
+
+    config = mergedConfig;
 
     break;
   }

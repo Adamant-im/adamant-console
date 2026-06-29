@@ -7,13 +7,21 @@ const nodes = network.nodes.map(
   ({ ip, protocol, port }) => `${protocol}://${ip}${port ? `:${port}` : ''}`,
 );
 
-// Check health in interactive mode
-const checkHealthAtStartup = process.argv.length < 3;
+// Interactive mode can surface node availability before the first command runs.
+const checkHealthAtStartup =
+  process.argv.length < 3 &&
+  !process.env.NODE_TEST_CONTEXT &&
+  process.env.ADM_CHECK_HEALTH_AT_STARTUP !== '0';
 
+/**
+ * Shared ADAMANT SDK instance configured from local Console settings.
+ *
+ * @type {AdamantApi}
+ */
 const api = new AdamantApi({
   nodes,
   checkHealthAtStartup,
-  logLevel: -1,
+  logLevel: 'none',
 });
 
 export default api;
