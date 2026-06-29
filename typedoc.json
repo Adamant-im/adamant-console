@@ -1,0 +1,26 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["lib/api/index.js"],
+  "tsconfig": "tsconfig.docs.json",
+  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "theme": "markdown",
+  "out": "docs/reference/api",
+  "docsRoot": "docs",
+  "readme": "none",
+  "cleanOutputDir": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "githubPages": false,
+  "hideGenerator": true,
+  "sidebar": {
+    "autoConfiguration": true,
+    "format": "vitepress",
+    "collapsed": true,
+    "pretty": true
+  },
+  "navigation": {
+    "includeCategories": false,
+    "includeGroups": true
+  }
+}

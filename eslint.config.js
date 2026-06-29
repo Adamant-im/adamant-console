@@ -5,16 +5,22 @@ const nodeGlobals = {
   Buffer: 'readonly',
   console: 'readonly',
   process: 'readonly',
+  URL: 'readonly',
   URLSearchParams: 'readonly',
 };
 
 export default [
   {
-    ignores: ['node_modules/**'],
+    ignores: [
+      'node_modules/**',
+      'docs/.vitepress/cache/**',
+      'docs/.vitepress/dist/**',
+      'docs/reference/api/**',
+    ],
   },
   js.configs.recommended,
   {
-    files: ['**/*.js'],
+    files: ['**/*.{js,mjs}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

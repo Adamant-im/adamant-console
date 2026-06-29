@@ -93,10 +93,18 @@ test('getDelegate rejects unsupported explicit lookup keys', async () => {
 
 test('queryStringToObject parses comma and ampersand fragments', () => {
   assert.deepEqual(
-    queryStringToObject(['senderId=U1,and:recipientId=U2', 'limit=10']),
+    queryStringToObject([
+      'senderId=U1,and:recipientId=U2',
+      'or:type=0&limit=10',
+    ]),
     {
       senderId: 'U1',
-      'and:recipientId': 'U2',
+      and: {
+        recipientId: 'U2',
+      },
+      or: {
+        type: '0',
+      },
       limit: '10',
     },
   );
@@ -111,9 +119,17 @@ test('queryStringToObject normalizes deprecated direct-transfer filters', () => 
       'or:withoutDirectTransfers=1',
     ]),
     {
-      includeDirectTransfers: '0',
-      'and:includeDirectTransfers': '1',
-      'or:includeDirectTransfers': '1',
+      includeDirectTransfers: '1',
+    },
+  );
+});
+
+test('queryStringToObject passes prefixed control parameters as options', () => {
+  assert.deepEqual(
+    queryStringToObject(['and:limit=5', 'or:orderBy=timestamp:asc']),
+    {
+      limit: '5',
+      orderBy: 'timestamp:asc',
     },
   );
 });
@@ -154,7 +170,10 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
   });
 
   await getTransaction('123', 'returnUnconfirmed=1');
-  await getTransactions('senderId=U1,recipientId=U2', 'orderBy=timestamp:desc');
+  await getTransactions(
+    'blockId=7917597195203393333,and:recipientId=U2',
+    'orderBy=timestamp:asc',
+  );
   await getChats('U1', 'includeDirectTransfers=1');
   await getChatMessages('U1', 'U2', 'returnUnconfirmed=1');
   await getChatTransactions('withoutDirectTransfers=1');
@@ -163,7 +182,11 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
     ['transaction', '123', { returnUnconfirmed: '1' }],
     [
       'transactions',
-      { senderId: 'U1', recipientId: 'U2', orderBy: 'timestamp:desc' },
+      {
+        blockId: '7917597195203393333',
+        and: { recipientId: 'U2' },
+        orderBy: 'timestamp:asc',
+      },
     ],
     ['chats', 'U1', { includeDirectTransfers: '1' }],
     ['chatMessages', 'U1', 'U2', { returnUnconfirmed: '1' }],
