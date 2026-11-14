@@ -38,7 +38,7 @@ Create a user config:
 node bin/adamant.js init
 ```
 
-By default, Console writes `~/.adm/config.jsonc`. A local `config.jsonc` in the current working directory can also override defaults for development.
+By default, Console writes `~/.adm/config.jsonc`. If that file exists, it is used even when `./config.jsonc` is also present. See [Configuration](./configuration.md) for the full lookup order. `adm client` prints the file the process loaded.
 
 ## Run Console
 
@@ -65,6 +65,14 @@ JSON-RPC daemon:
 ```sh
 node bin/adamant.js rpc server
 ```
+
+Send a small test amount with an `ADM` suffix. A bare decimal is rejected:
+
+```sh
+adm send tokens U123456789 0.001ADM
+```
+
+`0.001` is not valid. `100000` is 100000 token units, which is 0.001 ADM, because 1 ADM is 100000000 units. Details are in the [CLI reference](../reference/cli.md).
 
 ## Next Steps
 

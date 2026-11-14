@@ -40,7 +40,7 @@ Create a user config from the bundled default:
 node bin/adamant.js init
 ```
 
-By default, the file is created as `~/.adm/config.jsonc`. You can also keep `config.jsonc` in the current working directory for local overrides.
+By default, the file is created as `~/.adm/config.jsonc`. Console checks that file first, then `./config.jsonc` in the current working directory, then the packaged `config.default.jsonc`. The first existing user file wins. `adm client` prints the resolved path. The JSON-RPC server uses the same resolution and prints the path at startup.
 
 Important fields:
 
@@ -92,7 +92,7 @@ adm node height
 You can override the configured passphrase for a single CLI invocation:
 
 ```sh
-adm --passphrase "your local passphrase" send tokens U123456789 1
+adm --passphrase "your local passphrase" send tokens U123456789 1ADM
 ```
 
 Avoid shell history exposure when using passphrase flags in shared environments.
@@ -146,7 +146,7 @@ The server listens on `config.rpc.port` and exposes methods that match the exist
 - `sendSignal`
 - `voteFor`
 
-Array-style methods accept JSON-RPC `params` as an array. Template-style send and vote methods accept named object parameters.
+Array-style methods accept JSON-RPC `params` as an array. Send and vote methods accept a named object. An array-wrapped object such as `[{"address":"U…","amount":"0.001ADM"}]` is rejected with `Send and vote methods expect object params, not an array`.
 
 ## JavaScript Integrations
 
