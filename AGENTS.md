@@ -108,7 +108,7 @@ npm ci --ignore-scripts
 node bin/adamant.js
 
 # Run a single CLI command
-node bin/adamant.js send tokens U123456789 1
+node bin/adamant.js send tokens U123456789 1ADM
 node bin/adamant.js get address U123456789
 node bin/adamant.js account new
 

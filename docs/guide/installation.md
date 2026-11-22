@@ -18,14 +18,31 @@ node bin/adamant.js client version
 
 ## npm Binary
 
-The package exposes the `adm` binary:
+Install the published package with lifecycle scripts disabled:
 
 ```sh
+npm install -g adamant-console --ignore-scripts
 adm client version
 adm node height
 ```
 
 When working from a checkout, `node bin/adamant.js ...` and `adm ...` use the same command surface.
+
+Current releases override the transitive `uuid` dependency to 11.1.1. Install output should not include the `uuid@8.3.2` deprecation warning seen with older dependency trees.
+
+## Global install with nvm
+
+nvm does not put `node`, `npm`, or global binaries such as `adm` on `PATH` until the shell loads nvm. Non-interactive SSH sessions and scripts need that init step before `adm` can run:
+
+```sh
+export NVM_DIR="$HOME/.nvm"
+# shellcheck disable=SC1091
+. "$NVM_DIR/nvm.sh"
+npm install -g adamant-console --ignore-scripts
+adm client
+```
+
+Add the same `nvm.sh` source line to the shell profile used by interactive sessions. For a script, source `nvm.sh` at the start or call the `adm` binary under `~/.nvm/versions/node/<version>/bin/adm`.
 
 ## Development Scripts
 

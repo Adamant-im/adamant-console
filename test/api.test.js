@@ -28,6 +28,8 @@ import {
   sendTokens,
 } from '../lib/api/send.js';
 import { voteFor } from '../lib/api/vote.js';
+import config from '../utils/config.js';
+import { createRpcMethods, formatRpcListeningStatus } from '../lib/rpc.js';
 
 const originalMethods = new Map();
 
@@ -266,6 +268,70 @@ test('send wrappers delegate signing to adamant-api', async () => {
   assert.equal(calls[3][3], '{"type":"signal"}');
 });
 
+test('send wrappers reject bare decimal amounts before calling adamant-api', async () => {
+  let called = false;
+
+  stubApi('sendTokens', async () => {
+    called = true;
+
+    return { data: { transactionId: 'token-tx' } };
+  });
+  stubApi('sendMessage', async () => {
+    called = true;
+
+    return { data: { transactionId: 'message-tx' } };
+  });
+
+  const tokens = await sendTokens('U1', '0.001', 'secret');
+  const message = await sendMessage('U1', 'hello', '0.001', 'secret');
+  const nanoSuffix = await sendTokens('U1', '1NADM', 'secret');
+  const lowerSuffix = await sendTokens('U1', '1adm', 'secret');
+
+  assert.equal(called, false);
+  assert.equal(tokens.success, false);
+  assert.match(
+    tokens.errorMessage,
+    /Wrong 'amount' parameter: 0\.001\. Use 0\.001ADM/,
+  );
+  assert.match(tokens.errorMessage, /100000000/);
+  assert.match(message.errorMessage, /0\.001ADM/);
+  assert.match(nanoSuffix.errorMessage, /Wrong 'amount' parameter: 1NADM/);
+  assert.match(lowerSuffix.errorMessage, /0\.001ADM/);
+});
+
+test('send wrappers keep integer token units and spaced ADM suffixes', async () => {
+  const calls = [];
+
+  stubApi('sendTokens', async (...args) => {
+    calls.push(args);
+
+    return { data: { transactionId: 'token-tx' } };
+  });
+
+  await sendTokens('U1', '100000', 'secret');
+  await sendTokens('U1', '1 ADM', 'secret');
+  await sendTokens('U1', 100000, 'secret');
+
+  assert.deepEqual(calls[0].slice(1), ['U1', 100000, false]);
+  assert.deepEqual(calls[1].slice(1), ['U1', 1, true]);
+  assert.deepEqual(calls[2].slice(1), ['U1', 100000, false]);
+});
+
+test('optional message amount stays empty without calling amount validation', async () => {
+  const calls = [];
+
+  stubApi('sendMessage', async (...args) => {
+    calls.push(args);
+
+    return { data: { transactionId: 'message-tx' } };
+  });
+
+  await sendMessage('U1', 'hello', '', 'secret');
+
+  assert.equal(Number.isNaN(calls[0][4]), true);
+  assert.equal(calls[0][5], false);
+});
+
 test('delegate and vote wrappers pass explicit passphrases', async () => {
   stubApi('newDelegate', async (...args) => ({
     data: { args },
@@ -280,4 +346,60 @@ test('delegate and vote wrappers pass explicit passphrases', async () => {
   assert.deepEqual(await voteFor(['delegatePublicKey', '-other'], 'secret'), {
     args: ['secret', ['+delegatePublicKey', '-other']],
   });
+});
+
+test('voteFor names the current network when a delegate username is missing', async () => {
+  stubApi('voteForDelegate', async () => ({
+    success: false,
+    errorMessage:
+      "Wrong 'votes' parameter: lynx. Error: unable to retrieve the delegate's public key",
+  }));
+
+  const result = await voteFor(['lynx'], 'secret');
+
+  assert.match(
+    result.errorMessage,
+    /unable to retrieve the delegate's public key/,
+  );
+  assert.match(
+    result.errorMessage,
+    new RegExp(`current network \\(${config.network}\\)`),
+  );
+  assert.match(result.errorMessage, /public key prefixed by \+ or -/);
+});
+
+test('object-style RPC methods reject array-wrapped params', async () => {
+  const methods = createRpcMethods();
+  let called = false;
+
+  stubApi('sendTokens', async () => {
+    called = true;
+
+    return { data: { transactionId: 'token-tx' } };
+  });
+
+  const rejected = await methods.sendTokens([
+    { address: 'U1', amount: '0.001ADM' },
+  ]);
+  const accepted = await methods.sendTokens({
+    address: 'U1',
+    amount: '1ADM',
+    passphrase: 'secret',
+  });
+
+  assert.equal(rejected.success, false);
+  assert.match(rejected.error, /object params, not an array/);
+  assert.equal(accepted, 'token-tx');
+  assert.equal(called, true);
+});
+
+test('RPC startup status includes the resolved config path', () => {
+  const status = formatRpcListeningStatus(5080);
+
+  assert.equal(status.success, true);
+  assert.match(status.data, /listening on port 5080/);
+  assert.equal(status.config, config.configPath);
+  assert.equal(status.network, config.network);
+  assert.equal(status.account, config.accountAddress);
+  assert.equal(JSON.stringify(status).includes('passphrase'), false);
 });

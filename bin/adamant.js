@@ -98,7 +98,23 @@ installDelegateCommands(program);
 installVoteCommands(program);
 installInitCommand(program);
 
-const client = program.command('client').description('inspect Console client');
+const client = program
+  .command('client')
+  .description('inspect Console client')
+  .action(() => {
+    log(getClientInfo());
+  });
+
+addHelp(
+  client,
+  `
+With no subcommand, prints the same version and config summary as client version.
+
+Examples:
+  $ adm client
+  $ adm client version
+`,
+);
 
 addHelp(
   client.command('version'),
