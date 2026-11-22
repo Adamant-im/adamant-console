@@ -177,8 +177,8 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
     'orderBy=timestamp:asc',
   );
   await getChats('U1', 'includeDirectTransfers=1');
-  await getChatMessages('U1', 'U2', 'returnUnconfirmed=1');
-  await getChatTransactions('withoutDirectTransfers=1');
+  await getChatMessages('U1', 'U2', 'returnUnconfirmed=1,and:type=8');
+  await getChatTransactions('withoutDirectTransfers=1,and:senderId=U1');
 
   assert.deepEqual(calls, [
     ['transaction', '123', { returnUnconfirmed: '1' }],
@@ -191,9 +191,44 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
       },
     ],
     ['chats', 'U1', { includeDirectTransfers: '1' }],
-    ['chatMessages', 'U1', 'U2', { returnUnconfirmed: '1' }],
-    ['chatTransactions', { includeDirectTransfers: '0' }],
+    ['chatMessages', 'U1', 'U2', { returnUnconfirmed: '1', type: '8' }],
+    ['chatTransactions', { includeDirectTransfers: '0', senderId: 'U1' }],
   ]);
+});
+
+test('chat and chatroom wrappers reject or: filters before calling adamant-api', async () => {
+  let called = false;
+
+  stubApi('getChats', async () => {
+    called = true;
+
+    return { success: true };
+  });
+  stubApi('getChatMessages', async () => {
+    called = true;
+
+    return { success: true };
+  });
+  stubApi('getChatTransactions', async () => {
+    called = true;
+
+    return { success: true };
+  });
+
+  const chats = await getChats('U1', 'or:type=8');
+  const messages = await getChatMessages('U1', 'U2', 'or:type=8');
+  const transactions = await getChatTransactions('or:senderId=U1');
+
+  assert.equal(called, false);
+  assert.equal(chats.success, false);
+  assert.match(chats.errorMessage, /OR filters \(or:\) are not supported/);
+  assert.equal(messages.success, false);
+  assert.match(messages.errorMessage, /OR filters \(or:\) are not supported/);
+  assert.equal(transactions.success, false);
+  assert.match(
+    transactions.errorMessage,
+    /OR filters \(or:\) are not supported/,
+  );
 });
 
 test('basic read wrappers unwrap data payloads', async () => {

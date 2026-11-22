@@ -8,7 +8,7 @@ adm get transactions recipientId=U123456789,limit=10
 adm get transactions 'types=0&orderBy=timestamp:desc&returnUnconfirmed=1'
 ```
 
-Use `,` or `&` to combine query parameters. Console uses `adamant-api` v3 transaction-query semantics: top-level transaction filters are combined with AND by default. Prefix filters with `or:` only when you need an OR group. The `and:` prefix is still accepted for compatibility, but it is no longer required for normal multi-filter queries.
+Use `,` or `&` to combine query parameters. Console uses `adamant-api` v3 transaction-query semantics: top-level transaction filters are combined with AND by default. Prefix filters with `or:` only when you need an OR group on `adm get transactions` (`/api/transactions`). The `and:` prefix is still accepted for compatibility, but it is no longer required for normal multi-filter queries. Chat and chatroom queries (`adm get chats`, `adm get chat`, and `getChatTransactions`) accept only `AND`-combined filters and reject `or:`.
 
 ```sh
 adm get transactions 'senderId=U123456789,recipientId=U987654321'

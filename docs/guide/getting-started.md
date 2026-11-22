@@ -11,7 +11,7 @@ Use Console when you need to:
 
 ## Requirements
 
-- Node.js 22.13.0 or newer
+- Node.js 22.22.2+ (on 22.x) or 24.15.0+
 - npm 10 or newer
 
 ## Install Dependencies
