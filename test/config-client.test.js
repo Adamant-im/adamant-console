@@ -49,8 +49,8 @@ function readConfigFromChild(configDir, cwd = configDir) {
 }
 
 function createTempConfigDir(t) {
-  const configDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'adamant-console-test-'),
+  const configDir = fs.realpathSync(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'adamant-console-test-')),
   );
 
   t.after(() => {
