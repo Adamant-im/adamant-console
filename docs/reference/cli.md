@@ -61,7 +61,7 @@ adm get transactions recipientId=U123456789,limit=10
 adm get transactions 'types=0&orderBy=timestamp:desc&returnUnconfirmed=1'
 ```
 
-Query arguments use ADAMANT Node query parameters. For `get transactions`, combine fragments with `,` or `&`. Prefix a parameter with `and:` or `or:` for explicit logical grouping.
+Query arguments use ADAMANT Node query parameters. For `get transactions`, combine fragments with `,` or `&`. Prefix a parameter with `and:` or `or:` for explicit logical grouping on `get transactions`. Chatroom commands (`get chats`, `get chat`) accept only plain `AND`-combined filter names (`and:` prefixes are normalized to plain names, and `or:` filters are rejected).
 
 Delegate usernames and addresses are resolved on the configured network. `lynx` is a well-known mainnet delegate name and does not resolve on testnet unless that delegate is registered there. Public keys avoid that lookup.
 

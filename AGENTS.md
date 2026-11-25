@@ -13,7 +13,7 @@ Agent output must optimize for:
 3. Simplicity — the codebase is intentionally lightweight; avoid over-engineering
 
 > The codebase is known to be outdated and will be updated. Prefer targeted, minimal fixes over broad rewrites.
-> Do not preserve obsolete legacy paths merely for old runtime support. The supported runtime is Node.js 22.13.0 or newer.
+> Do not preserve obsolete legacy paths merely for old runtime support. The supported runtime is Node.js 22.22.2+ (on 22.x) or 24.15.0+ (matching ADAMANT Node v0.11.0).
 
 ## Language Policy
 
@@ -87,6 +87,13 @@ config.jsonc          # User-local config (git-ignored; overrides defaults)
 
 `adamant-api` npm package (`utils/api.js`) wraps all ADAMANT node HTTP calls and transaction signing. Check its README before changing API interaction patterns. `adamant-api` is the source of truth for request/response normalization, node health checks, transaction signing, and message encryption behavior.
 
+When working with ADAMANT Node v0.11.0+ query endpoints:
+
+- `/api/transactions` combines top-level `adamant-api` v3 filters with `AND` by default and supports `or:`-prefixed filters (`or: { ... }`)
+- `/api/chats/get`, `/api/chatrooms/*`, and `/api/states/get` apply only plain (`AND`-combined) filter names. Node v0.11.0 maps `and:` prefixes to plain names and rejects `or:`; Node v0.10.x silently ignores prefixed filters and returns unfiltered rows. `adamant-api` v3.2.0+ sends plain filter names and rejects `or:` on these endpoints (whereas v3.0.0–v3.1.0 prefixed plain filters with `and:` and did not reject `or:`)
+- Legacy forging and DApp runtime control HTTP endpoints were removed in ADAMANT Node v0.11.0; Console signs transactions locally and submits them through standard transaction endpoints
+- Public node REST endpoints enforce default anti-abuse rate limits in Node v0.11.0 (`HTTP 429` with `Retry-After` and `RateLimit-*` headers)
+
 ## Configuration
 
 `config.default.jsonc` defines the schema; `config.jsonc` is the user override (git-ignored). Key fields:
@@ -126,13 +133,22 @@ npm run format
 
 # Check formatting
 npm run format:check
+
+# Run unit tests
+npm test
+
+# Build documentation
+npm run docs:build
 ```
 
 ## Dependency Update Rules
 
 - Follow `.ai-ignored/update-deps-securely.md` when updating npm packages
-- Check current package state with `npm outdated` and `npm audit`
-- Use `npm-check-updates` only after reviewing package metadata for suspicious names, maintainers, repositories, recent releases, and lifecycle scripts
+- Enforce the 7-day npm dependency release-age quarantine (`min-release-age=7` in `.npmrc`): adopt only stable package versions published at least 7 days before the update
+- `min-release-age` is recognized only by npm 11.10.0+ during `npm install` and `npm update` (`npm ci` installs directly from `package-lock.json`, and older npm versions ignore the setting). Check `npm --version` (`>=11.10.0`) before updating dependencies, while keeping `npm 10 or newer` as the requirement for running Console
+- When a reviewed first-party release or critical/high advisory fix younger than 7 days must be adopted early, pass `--min-release-age-exclude=<package>` explicitly during the update, verify provenance and transitive dependencies, and record the exception in the PR
+- Check current package state with `npm outdated`, `npm audit`, and `npx npm-check-updates@23 --cooldown 7d --format group`
+- Use `npm-check-updates` (`--cooldown 7d`) only after reviewing package metadata for suspicious names, maintainers, repositories, recent releases, and lifecycle scripts
 - Install with scripts disabled by default:
 
 ```bash
@@ -216,10 +232,11 @@ A change is done when:
 
 ## Related Repositories
 
-| Repository                                                                   | Relevance                                                                                                                                                                                                                                                                           |
-| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`adamant`](https://github.com/Adamant-im/adamant)                           | ADAMANT blockchain node — the server `adamant-console` talks to; see also its [`AGENTS.md`](https://github.com/Adamant-im/adamant/blob/dev/AGENTS.md) for node-level rules                                                                                                          |
-| [`adamant-api-jsclient`](https://github.com/Adamant-im/adamant-api-jsclient) | The `adamant-api` npm package used in `utils/api.js` — source for API interaction behavior                                                                                                                                                                                          |
-| [`adamant-wallets`](https://github.com/Adamant-im/adamant-wallets)           | Canonical coin/token specification for all ADAMANT apps — contains the authoritative ADM **mainnet and testnet node lists** (`assets/general/adamant/info.json`), node health-check parameters, and `alt_ip` fallbacks; reference when updating `config.default.jsonc` node entries |
-| [`adamant-im`](https://github.com/Adamant-im/adamant-im)                     | ADAMANT Messenger PWA — another client for the same blockchain; useful reference for protocol usage patterns                                                                                                                                                                        |
-| [ADAMANT docs](https://docs.adamant.im)                                      | Node API reference, account/transaction formats, and protocol details                                                                                                                                                                                                               |
+| Repository                                                                   | Relevance                                                                                                                                                                                                                                                                              |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`adamant`](https://github.com/Adamant-im/adamant)                           | ADAMANT blockchain node (v0.11.0+) — the server `adamant-console` talks to; hosts the consolidated VitePress docs (`docs/`) and OpenAPI 3.2 specification (`openapi/specification/openapi.yaml`); see also its [`AGENTS.md`](https://github.com/Adamant-im/adamant/blob/dev/AGENTS.md) |
+| [`adamant-api-jsclient`](https://github.com/Adamant-im/adamant-api-jsclient) | The `adamant-api` npm package used in `utils/api.js` — source for API interaction behavior                                                                                                                                                                                             |
+| [`adamant-wallets`](https://github.com/Adamant-im/adamant-wallets)           | Canonical coin/token specification for all ADAMANT apps — contains the authoritative ADM **mainnet and testnet node lists** (`assets/general/adamant/info.json`), node health-check parameters, and `alt_ip` fallbacks; reference when updating `config.default.jsonc` node entries    |
+| [`adamant-im`](https://github.com/Adamant-im/adamant-im)                     | ADAMANT Messenger PWA — another client for the same blockchain; useful reference for protocol usage patterns                                                                                                                                                                           |
+| [ADAMANT docs](https://docs.adamant.im)                                      | Node API reference, operator documentation, account/transaction formats, and protocol details                                                                                                                                                                                          |
+| [ADAMANT API schema](https://docs.adamant.im/schema/)                        | Interactive Swagger UI and bundled OpenAPI 3.2 specification (`https://docs.adamant.im/schema/schema.json`) published from `Adamant-im/adamant`                                                                                                                                        |

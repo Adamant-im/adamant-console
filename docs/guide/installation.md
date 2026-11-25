@@ -65,4 +65,4 @@ npm run docs:preview
 
 ## Runtime Support
 
-The supported runtime is Node.js 22.13.0 or newer. Older Node.js runtimes are not supported by this repository.
+The supported runtime is Node.js 22.22.2+ (on 22.x) or 24.15.0+ (matching ADAMANT Node v0.11.0). Older Node.js runtimes are not supported by this repository.

@@ -177,8 +177,8 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
     'orderBy=timestamp:asc',
   );
   await getChats('U1', 'includeDirectTransfers=1');
-  await getChatMessages('U1', 'U2', 'returnUnconfirmed=1');
-  await getChatTransactions('withoutDirectTransfers=1');
+  await getChatMessages('U1', 'U2', 'returnUnconfirmed=1,and:type=8');
+  await getChatTransactions('withoutDirectTransfers=1,and:senderId=U1');
 
   assert.deepEqual(calls, [
     ['transaction', '123', { returnUnconfirmed: '1' }],
@@ -191,9 +191,108 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
       },
     ],
     ['chats', 'U1', { includeDirectTransfers: '1' }],
-    ['chatMessages', 'U1', 'U2', { returnUnconfirmed: '1' }],
-    ['chatTransactions', { includeDirectTransfers: '0' }],
+    ['chatMessages', 'U1', 'U2', { returnUnconfirmed: '1', type: '8' }],
+    ['chatTransactions', { includeDirectTransfers: '0', senderId: 'U1' }],
   ]);
+});
+
+test('chat and chatroom wrappers send plain filters on the wire through adamant-api', async () => {
+  const wireCalls = [];
+
+  stubApi('get', async (endpoint, params) => {
+    wireCalls.push([endpoint, params]);
+
+    return {
+      success: true,
+      data: { chats: [], messages: [], transactions: [] },
+    };
+  });
+
+  await getChats('U123456', 'includeDirectTransfers=1,and:type=8');
+  await getChatMessages('U123456', 'U654321', 'returnUnconfirmed=1,and:type=8');
+  await getChatTransactions('withoutDirectTransfers=1,and:senderId=U123456');
+
+  assert.equal(wireCalls.length, 3);
+  assert.equal(wireCalls[0][0], 'chatrooms/U123456');
+  assert.equal(wireCalls[0][1].type, '8');
+  assert.equal('and:type' in wireCalls[0][1], false);
+  assert.equal(wireCalls[1][0], 'chatrooms/U123456/U654321');
+  assert.equal(wireCalls[1][1].returnUnconfirmed, '1');
+  assert.equal(wireCalls[1][1].type, '8');
+  assert.equal('and:type' in wireCalls[1][1], false);
+  assert.equal(wireCalls[2][0], 'chats/get');
+  assert.equal(wireCalls[2][1].senderId, 'U123456');
+  assert.equal('and:senderId' in wireCalls[2][1], false);
+});
+
+test('chat and chatroom wrappers reject or: filters and conflicting duplicates before calling adamant-api', async () => {
+  let called = false;
+
+  stubApi('getChats', async (address, params) => {
+    called = true;
+
+    return { success: true, data: { address, params } };
+  });
+  stubApi('getChatMessages', async () => {
+    called = true;
+
+    return { success: true };
+  });
+  stubApi('getChatTransactions', async () => {
+    called = true;
+
+    return { success: true };
+  });
+
+  const chats = await getChats('U1', 'or:type=8');
+  const messages = await getChatMessages('U1', 'U2', 'or:returnUnconfirmed=1');
+  const transactions = await getChatTransactions('or:limit=5');
+  const conflictPlainFirst = await getChats('U1', 'type=8,and:type=0');
+  const conflictAndFirst = await getChatMessages(
+    'U1',
+    'U2',
+    'and:type=0,type=8',
+  );
+  const conflictRepeatedAnd = await getChatTransactions(
+    'and:type=8,and:type=0',
+  );
+
+  assert.equal(called, false);
+  assert.equal(chats.success, false);
+  assert.match(chats.errorMessage, /OR filters \(or:\) are not supported/);
+  assert.equal(messages.success, false);
+  assert.match(messages.errorMessage, /OR filters \(or:\) are not supported/);
+  assert.equal(transactions.success, false);
+  assert.match(
+    transactions.errorMessage,
+    /OR filters \(or:\) are not supported/,
+  );
+  assert.equal(conflictPlainFirst.success, false);
+  assert.match(
+    conflictPlainFirst.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
+  assert.equal(conflictAndFirst.success, false);
+  assert.match(
+    conflictAndFirst.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
+  assert.equal(conflictRepeatedAnd.success, false);
+  assert.match(
+    conflictRepeatedAnd.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
+
+  const errorMessageParam = await getChats(
+    'U1',
+    'errorMessage=custom,type=8,and:type=8',
+  );
+
+  assert.equal(called, true);
+  assert.deepEqual(errorMessageParam, {
+    address: 'U1',
+    params: { errorMessage: 'custom', type: '8' },
+  });
 });
 
 test('basic read wrappers unwrap data payloads', async () => {

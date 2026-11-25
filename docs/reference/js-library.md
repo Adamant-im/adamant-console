@@ -64,6 +64,6 @@ Never commit or log real passphrases. Keep secrets in local config or a trusted 
 
 ## Response Compatibility
 
-Console wrappers preserve ADAMANT Node API v0.10.0 response fields surfaced by `adamant-api`, including numeric `count`, transaction `timestampMs`, and nullable unconfirmed transaction fields returned with `returnUnconfirmed=1`.
+Console wrappers preserve ADAMANT Node API v0.11.0 response fields surfaced by `adamant-api`, including numeric `count`, transaction `timestampMs`, and nullable unconfirmed transaction fields returned with `returnUnconfirmed=1`.
 
-Chat query helpers send `includeDirectTransfers`. The deprecated `withoutDirectTransfers` input is accepted only as a compatibility alias and normalized before calling `adamant-api`.
+Chat query helpers (`getChats`, `getChatMessages`, `getChatTransactions`) send plain `AND`-combined filter names and `includeDirectTransfers`. Explicit `and:` prefixes are flattened to plain names, while `or:` filters are rejected because `/api/chats/get` and `/api/chatrooms/*` do not support `OR` queries. The deprecated `withoutDirectTransfers` input is accepted only as a compatibility alias and normalized before calling `adamant-api`.
