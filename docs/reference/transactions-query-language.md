@@ -15,7 +15,7 @@ adm get transactions 'senderId=U123456789,recipientId=U987654321'
 adm get transactions 'or:senderId=U123456789,or:recipientId=U987654321'
 ```
 
-Common options such as `limit`, `offset`, `orderBy`, `returnUnconfirmed`, `returnAsset`, `includeDirectTransfers`, and `userId` are passed as request options, not logical filters.
+Common options such as `limit`, `offset`, `orderBy`, `returnUnconfirmed`, `returnAsset`, and `includeDirectTransfers` are passed as request options, not logical filters. Avoid passing `userId` as a query parameter on chatroom endpoints (`adm get chats`, `adm get chat`): ADAMANT Node v0.11.0+ rejects query `userId` on `/api/chatrooms/*`, and `adamant-api` v3.2.0+ strips it because the account address is passed in the command argument.
 
 ## Transaction Filters
 

@@ -65,6 +65,41 @@
           "ip": "184.94.215.92",
           "protocol": "http",
           "port": 45555
+        },
+        {
+          "ip": "node2.blockchain2fa.io",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "tegmine.adm.im",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "tauri.adm.im",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "dschubba.adm.im",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "lake.bbry.org",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "sunshine.bbry.org",
+          "protocol": "https",
+          "port": ""
+        },
+        {
+          "ip": "clown.bbry.org",
+          "protocol": "https",
+          "port": ""
         }
       ]
     }

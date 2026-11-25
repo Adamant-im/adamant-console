@@ -51,7 +51,7 @@
     "vitepress": "2.0.0-alpha.21"
   },
   "dependencies": {
-    "adamant-api": "^3.1.0",
+    "adamant-api": "^3.2.0",
     "chalk": "^6.0.1",
     "commander": "^15.1.0",
     "jayson": "^5.0.0",

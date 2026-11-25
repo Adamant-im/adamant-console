@@ -90,7 +90,7 @@ config.jsonc          # User-local config (git-ignored; overrides defaults)
 When working with ADAMANT Node v0.11.0+ query endpoints:
 
 - `/api/transactions` combines top-level `adamant-api` v3 filters with `AND` by default and supports `or:`-prefixed filters (`or: { ... }`)
-- `/api/chats/get`, `/api/chatrooms/*`, and `/api/states/get` accept only plain (`AND`-combined) filters (`and:` prefixes are normalized to plain field names, while `or:` filters are rejected by Node v0.11.0 and `adamant-api` v3.1.0+)
+- `/api/chats/get`, `/api/chatrooms/*`, and `/api/states/get` apply only plain (`AND`-combined) filter names. Node v0.11.0 maps `and:` prefixes to plain names and rejects `or:`; Node v0.10.x silently ignores prefixed filters and returns unfiltered rows. `adamant-api` v3.2.0+ sends plain filter names and rejects `or:` on these endpoints (whereas v3.0.0–v3.1.0 prefixed plain filters with `and:` and did not reject `or:`)
 - Legacy forging and DApp runtime control HTTP endpoints were removed in ADAMANT Node v0.11.0; Console signs transactions locally and submits them through standard transaction endpoints
 - Public node REST endpoints enforce default anti-abuse rate limits in Node v0.11.0 (`HTTP 429` with `Retry-After` and `RateLimit-*` headers)
 
@@ -145,6 +145,8 @@ npm run docs:build
 
 - Follow `.ai-ignored/update-deps-securely.md` when updating npm packages
 - Enforce the 7-day npm dependency release-age quarantine (`min-release-age=7` in `.npmrc`): adopt only stable package versions published at least 7 days before the update
+- `min-release-age` is recognized only by npm 11.10.0+ during `npm install` and `npm update` (`npm ci` installs directly from `package-lock.json`, and older npm versions ignore the setting). Check `npm --version` (`>=11.10.0`) before updating dependencies, while keeping `npm 10 or newer` as the requirement for running Console
+- When a reviewed first-party release or critical/high advisory fix younger than 7 days must be adopted early, pass `--min-release-age-exclude=<package>` explicitly during the update, verify provenance and transitive dependencies, and record the exception in the PR
 - Check current package state with `npm outdated`, `npm audit`, and `npx npm-check-updates@23 --cooldown 7d --format group`
 - Use `npm-check-updates` (`--cooldown 7d`) only after reviewing package metadata for suspicious names, maintainers, repositories, recent releases, and lifecycle scripts
 - Install with scripts disabled by default:
