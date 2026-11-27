@@ -101,6 +101,7 @@ installInitCommand(program);
 const client = program
   .command('client')
   .description('inspect Console client')
+  .addHelpCommand(true)
   .action(() => {
     log(getClientInfo());
   });

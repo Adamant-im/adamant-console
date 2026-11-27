@@ -32,7 +32,7 @@ Array-style methods require `params` as an array. Send and vote methods accept a
 }
 ```
 
-The error is `Send and vote methods expect object params, not an array`. Read methods such as `getAddress` still expect an array. Amount strings use the same `ADM` suffix and integer token units as the CLI.
+The server returns JSON-RPC error `501` with message `Send and vote methods expect object params, not an array`. Read methods such as `getAddress` still expect an array. Amount strings use the same `ADM` suffix and integer token units as the CLI.
 :::
 
 ## Methods

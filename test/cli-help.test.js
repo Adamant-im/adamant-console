@@ -81,3 +81,18 @@ test('leaf commands expose concise examples in help', (t) => {
     assert.match(output, expectedExample, command.join(' '));
   }
 });
+
+test('client help subcommand prints subcommand help and exits 0', (t) => {
+  const helpVersion = runCli(['client', 'help', 'version'], t);
+  const helpVersionOutput = `${helpVersion.stdout}\n${helpVersion.stderr}`;
+
+  assert.equal(helpVersion.status, 0);
+  assert.match(helpVersionOutput, /Usage: adm client version/);
+  assert.match(helpVersionOutput, /adm client version/);
+
+  const clientDefault = runCli(['client'], t);
+  const info = JSON.parse(clientDefault.stdout);
+
+  assert.equal(clientDefault.status, 0);
+  assert.equal(info.success, true);
+});

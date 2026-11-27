@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
+import http from 'node:http';
 import test from 'node:test';
+import rpc from 'jayson/promise/index.js';
 
 import api from '../utils/api.js';
 import { createAccount } from '../lib/api/account.js';
@@ -247,6 +249,7 @@ test('chat and chatroom wrappers reject or: filters and conflicting duplicates b
   const chats = await getChats('U1', 'or:type=8');
   const messages = await getChatMessages('U1', 'U2', 'or:returnUnconfirmed=1');
   const transactions = await getChatTransactions('or:limit=5');
+  const conflictPlainPlain = await getChats('U1', 'type=8&type=0');
   const conflictPlainFirst = await getChats('U1', 'type=8,and:type=0');
   const conflictAndFirst = await getChatMessages(
     'U1',
@@ -267,6 +270,11 @@ test('chat and chatroom wrappers reject or: filters and conflicting duplicates b
     transactions.errorMessage,
     /OR filters \(or:\) are not supported/,
   );
+  assert.equal(conflictPlainPlain.success, false);
+  assert.match(
+    conflictPlainPlain.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
   assert.equal(conflictPlainFirst.success, false);
   assert.match(
     conflictPlainFirst.errorMessage,
@@ -285,7 +293,7 @@ test('chat and chatroom wrappers reject or: filters and conflicting duplicates b
 
   const errorMessageParam = await getChats(
     'U1',
-    'errorMessage=custom,type=8,and:type=8',
+    'errorMessage=custom,type=8&type=8,and:type=8',
   );
 
   assert.equal(called, true);
@@ -467,8 +475,49 @@ test('voteFor names the current network when a delegate username is missing', as
   assert.match(result.errorMessage, /public key prefixed by \+ or -/);
 });
 
-test('object-style RPC methods reject array-wrapped params', async () => {
-  const methods = createRpcMethods();
+test('voteFor rejects non-array and non-string votes without calling adamant-api', async () => {
+  let called = false;
+
+  stubApi('voteForDelegate', async () => {
+    called = true;
+
+    return { success: true };
+  });
+
+  const server = new rpc.Server(createRpcMethods());
+  const callServer = (request) =>
+    new Promise((resolve) => {
+      server.call(request, (err, res) => resolve({ err, res }));
+    });
+
+  const stringVote = await voteFor('lynx', 'secret');
+  const singleCharString = await voteFor('a', 'secret');
+  const emptyArray = await voteFor([], 'secret');
+  const nonStringItem = await voteFor([123], 'secret');
+  const rpcStringVote = await callServer({
+    jsonrpc: '2.0',
+    method: 'voteFor',
+    params: { votes: 'lynx', passphrase: 'secret' },
+    id: 1,
+  });
+
+  assert.equal(called, false);
+  assert.equal(stringVote.success, false);
+  assert.match(stringVote.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(singleCharString.success, false);
+  assert.match(singleCharString.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(emptyArray.success, false);
+  assert.match(emptyArray.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(nonStringItem.success, false);
+  assert.match(nonStringItem.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(rpcStringVote.res, undefined);
+  assert.equal(rpcStringVote.err.error.code, 501);
+  assert.match(rpcStringVote.err.error.message, /Wrong 'votes' parameter/);
+});
+
+test('object-style RPC methods reject array-wrapped params in the JSON-RPC error envelope', async (t) => {
+  const server = new rpc.Server(createRpcMethods());
+  const httpServer = server.http();
   let called = false;
 
   stubApi('sendTokens', async () => {
@@ -477,19 +526,71 @@ test('object-style RPC methods reject array-wrapped params', async () => {
     return { data: { transactionId: 'token-tx' } };
   });
 
-  const rejected = await methods.sendTokens([
-    { address: 'U1', amount: '0.001ADM' },
-  ]);
-  const accepted = await methods.sendTokens({
-    address: 'U1',
-    amount: '1ADM',
-    passphrase: 'secret',
+  await new Promise((resolve) => {
+    httpServer.listen(0, '127.0.0.1', resolve);
+  });
+  t.after(() => {
+    httpServer.close();
   });
 
-  assert.equal(rejected.success, false);
-  assert.match(rejected.error, /object params, not an array/);
-  assert.equal(accepted, 'token-tx');
+  const { port } = httpServer.address();
+  const postRpc = (payload) =>
+    new Promise((resolve, reject) => {
+      const body = JSON.stringify(payload);
+      const req = http.request(
+        {
+          hostname: '127.0.0.1',
+          port,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body),
+          },
+        },
+        (res) => {
+          let raw = '';
+          res.setEncoding('utf8');
+          res.on('data', (chunk) => {
+            raw += chunk;
+          });
+          res.on('end', () => {
+            resolve(JSON.parse(raw));
+          });
+        },
+      );
+      req.on('error', reject);
+      req.end(body);
+    });
+
+  const rejected = await postRpc({
+    jsonrpc: '2.0',
+    method: 'sendTokens',
+    params: [{ address: 'U1', amount: '0.001ADM' }],
+    id: 1,
+  });
+
+  assert.equal(called, false);
+  assert.equal(rejected.result, undefined);
+  assert.equal(rejected.error.code, 501);
+  assert.equal(
+    rejected.error.message,
+    'Send and vote methods expect object params, not an array',
+  );
+
+  const accepted = await postRpc({
+    jsonrpc: '2.0',
+    method: 'sendTokens',
+    params: {
+      address: 'U1',
+      amount: '1ADM',
+      passphrase: 'secret',
+    },
+    id: 2,
+  });
+
   assert.equal(called, true);
+  assert.equal(accepted.error, undefined);
+  assert.equal(accepted.result, 'token-tx');
 });
 
 test('RPC startup status includes the resolved config path', () => {

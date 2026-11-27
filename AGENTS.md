@@ -147,6 +147,7 @@ npm run docs:build
 - Enforce the 7-day npm dependency release-age quarantine (`min-release-age=7` in `.npmrc`): adopt only stable package versions published at least 7 days before the update
 - `min-release-age` is recognized only by npm 11.10.0+ during `npm install` and `npm update` (`npm ci` installs directly from `package-lock.json`, and older npm versions ignore the setting). Check `npm --version` (`>=11.10.0`) before updating dependencies, while keeping `npm 10 or newer` as the requirement for running Console
 - When a reviewed first-party release or critical/high advisory fix younger than 7 days must be adopted early, pass `--min-release-age-exclude=<package>` explicitly during the update, verify provenance and transitive dependencies, and record the exception in the PR
+- Explicit dev-only prerelease exception: `vitepress` is pinned to an exact `2.0.0-alpha.x` version (still subject to the 7-day release-age quarantine) until VitePress 2.0 stable is published, because the docs toolchain already targets VitePress 2 and `vitepress` 1.x depends on vulnerable Vite 5 packages
 - Check current package state with `npm outdated`, `npm audit`, and `npx npm-check-updates@23 --cooldown 7d --format group`
 - Use `npm-check-updates` (`--cooldown 7d`) only after reviewing package metadata for suspicious names, maintainers, repositories, recent releases, and lifecycle scripts
 - Install with scripts disabled by default:
