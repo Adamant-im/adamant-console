@@ -67,3 +67,5 @@ Never commit or log real passphrases. Keep secrets in local config or a trusted 
 Console wrappers preserve ADAMANT Node API v0.11.0 response fields surfaced by `adamant-api`, including numeric `count`, transaction `timestampMs`, and nullable unconfirmed transaction fields returned with `returnUnconfirmed=1`.
 
 Chat query helpers (`getChats`, `getChatMessages`, `getChatTransactions`) send plain `AND`-combined filter names and `includeDirectTransfers`. Explicit `and:` prefixes are flattened to plain names, while `or:` filters are rejected because `/api/chats/get` and `/api/chatrooms/*` do not support `OR` queries. The deprecated `withoutDirectTransfers` input is accepted only as a compatibility alias and normalized before calling `adamant-api`.
+
+For an upper height bound in `getChatTransactions`, configure only ADAMANT Node v0.11.0 or newer. Older nodes can silently ignore `toHeight` and return records above the requested height.

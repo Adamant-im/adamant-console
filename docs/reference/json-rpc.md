@@ -8,7 +8,7 @@ node bin/adamant.js rpc server
 
 The server listens on `config.rpc.port`, defaulting to `5080`. One process can bind that port. Change `rpc.port` before starting a second server.
 
-Startup output includes the resolved config path, network, and account address. The server uses the same lookup order as the CLI. See [Configuration](../guide/configuration.md). The log does not include the passphrase.
+Startup output lists the resolved config path, network, and default signing account address. When you start the server with `--passphrase`, the reported address reflects that override. The server uses the same lookup order as the CLI. See [Configuration](../guide/configuration.md). The log does not include the passphrase.
 
 Example request:
 
@@ -63,6 +63,8 @@ The server returns JSON-RPC error `501` with message `Send and vote methods expe
 | `sendRich`                         | object       | Transaction ID                              |
 | `sendSignal`                       | object       | Transaction ID                              |
 | `voteFor`                          | object       | Vote transaction                            |
+
+If you use `toHeight` with `getChatTransactions`, configure only ADAMANT Node v0.11.0 or newer. Older nodes can silently ignore that upper bound.
 
 ## Array Params Example
 

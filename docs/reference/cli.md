@@ -65,7 +65,7 @@ Query arguments use ADAMANT Node query parameters. For `get transactions`, combi
 
 Delegate usernames and addresses are resolved on the configured network. `lynx` is a well-known mainnet delegate name and does not resolve on testnet unless that delegate is registered there. Public keys avoid that lookup.
 
-`adm get chat` returns chat messages with the ciphertext still in `asset.chat`. It does not add a decoded field. `adm get message <transactionId>` loads one message transaction and sets `transaction.decoded` when the configured passphrase can decrypt it.
+`adm get chat` returns chat messages with the ciphertext still in `asset.chat`. `adm get message <transactionId>` loads one message transaction and attempts local decryption with the configured passphrase. See [JSON Answer Formats](./json-answer-formats.md) for the `transaction.decoded` field.
 
 See [Transactions Query Language](./transactions-query-language.md) for filter fields and examples.
 

@@ -455,22 +455,28 @@ test('delegate and vote wrappers pass explicit passphrases', async () => {
   });
 });
 
-test('voteFor names the current network when a delegate username is missing', async () => {
-  stubApi('voteForDelegate', async () => ({
+test('voteFor names the network without claiming absence when delegate lookup is unavailable', async () => {
+  stubApi('getDelegate', async () => ({
     success: false,
-    errorMessage:
-      "Wrong 'votes' parameter: lynx. Error: unable to retrieve the delegate's public key",
+    status: 503,
+    errorMessage: 'Delegate lookup temporarily unavailable',
   }));
 
-  const result = await voteFor(['lynx'], 'secret');
+  const result = await voteFor(
+    ['lynx'],
+    'Local fixture passphrase for delegate lookup',
+  );
 
+  assert.equal(result.success, false);
   assert.match(
     result.errorMessage,
     /unable to retrieve the delegate's public key/,
   );
   assert.match(
     result.errorMessage,
-    new RegExp(`current network \\(${config.network}\\)`),
+    new RegExp(
+      `Unable to resolve the delegate on the current network \\(${config.network}\\)`,
+    ),
   );
   assert.match(result.errorMessage, /public key prefixed by \+ or -/);
 });

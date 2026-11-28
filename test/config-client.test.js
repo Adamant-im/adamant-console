@@ -172,3 +172,47 @@ test('adm client version reports config, network, and unset account', (t) => {
   assert.equal(info.network, 'testnet');
   assert.equal(info.account, 'Not set');
 });
+
+test('RPC startup reports the account selected by --passphrase', (t) => {
+  const configDir = createTempConfigDir(t);
+  const configPath = path.join(configDir, 'config.jsonc');
+  const filePassphrase = 'Local fixture passphrase in config only';
+  const override = 'Local fixture passphrase for the CLI override';
+  const { publicKey } = createKeypairFromPassphrase(override);
+
+  fs.writeFileSync(
+    configPath,
+    JSON.stringify({ passphrase: filePassphrase, rpc: { port: 0 } }),
+    { mode: 0o600 },
+  );
+
+  const source = `
+    import http from 'node:http';
+    const listen = http.Server.prototype.listen;
+    http.Server.prototype.listen = function (port) {
+      return listen.call(this, port, '127.0.0.1', () => this.close());
+    };
+    await import(${JSON.stringify(pathToFileURL(cliPath).href)});
+  `;
+  const output = runNode(
+    [
+      '--input-type=module',
+      '--eval',
+      source,
+      '--',
+      cliPath,
+      '--passphrase',
+      override,
+      'rpc',
+      'server',
+    ],
+    { configDir, cwd: configDir },
+  );
+
+  const status = JSON.parse(output);
+
+  assert.equal(status.config, configPath);
+  assert.equal(status.account, createAddressFromPublicKey(publicKey));
+  assert.equal(output.includes(filePassphrase), false);
+  assert.equal(output.includes(override), false);
+});

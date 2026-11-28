@@ -59,19 +59,19 @@ The passphrase and private key are sensitive. Do not share, log, or commit real 
 
 Read commands return the object or list from the node under a command-specific field:
 
-| Command                                      | Main field                                                         |
-| -------------------------------------------- | ------------------------------------------------------------------ |
-| `adm get address <address>`                  | `account`                                                          |
-| `adm get block <blockId>`                    | `block`                                                            |
-| `adm get blocks <query>`                     | `blocks`                                                           |
-| `adm get delegate <delegate>`                | `delegate`                                                         |
-| `adm get message <transactionId>`            | `transaction`, plus `transaction.decoded` when decryption succeeds |
-| `adm get transaction <transactionId>`        | `transaction`                                                      |
-| `adm get transactions <query>`               | `transactions` and `count`                                         |
-| `adm get chats <address>`                    | `chats`                                                            |
-| `adm get chat <ownAddress> <partnerAddress>` | `messages` or `transactions`                                       |
+| Command                                      | Main field                                               |
+| -------------------------------------------- | -------------------------------------------------------- |
+| `adm get address <address>`                  | `account`                                                |
+| `adm get block <blockId>`                    | `block`                                                  |
+| `adm get blocks <query>`                     | `blocks`                                                 |
+| `adm get delegate <delegate>`                | `delegate`                                               |
+| `adm get message <transactionId>`            | `transaction`, with `decoded` after a decryption attempt |
+| `adm get transaction <transactionId>`        | `transaction`                                            |
+| `adm get transactions <query>`               | `transactions` and `count`                               |
+| `adm get chats <address>`                    | `chats`                                                  |
+| `adm get chat <ownAddress> <partnerAddress>` | `messages` or `transactions`                             |
 
-`adm get chat` returns message records with ciphertext in `asset.chat.message`. It does not decrypt them. `adm get message <transactionId>` adds `transaction.decoded` when the configured passphrase belongs to the sender or recipient and decryption succeeds. If the passphrase cannot decrypt the message, the transaction is returned without `decoded`.
+`adm get chat` returns message records with ciphertext in `asset.chat.message`. `adm get message <transactionId>` attempts decryption when the configured passphrase belongs to the sender or recipient and the peer's public key is available. After an attempt, `transaction.decoded` contains the plaintext or an empty string if authentication fails. The field is absent when Console skips decryption.
 
 Example:
 
