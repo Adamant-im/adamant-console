@@ -6,7 +6,9 @@ Start the server:
 node bin/adamant.js rpc server
 ```
 
-The server listens on `config.rpc.port`, defaulting to `5080`.
+The server listens on `config.rpc.port`, defaulting to `5080`. One process can bind that port. Change `rpc.port` before starting a second server.
+
+Startup output lists the resolved config path, network, and default signing account address. When you start the server with `--passphrase`, the reported address reflects that override. The server uses the same lookup order as the CLI. See [Configuration](../guide/configuration.md). The log does not include the passphrase.
 
 Example request:
 
@@ -16,7 +18,22 @@ curl -s -X POST http://127.0.0.1:5080 \
   -d '{"jsonrpc":"2.0","method":"clientVersion","params":[],"id":1}'
 ```
 
-Array-style methods require `params` as an array. Template-style send and vote methods accept named object parameters.
+Array-style methods require `params` as an array. Send and vote methods accept a named object. They do not accept an array-wrapped object.
+
+::: warning Object params are not arrays
+`sendTokens`, `sendMessage`, `sendRich`, `sendSignal`, and `voteFor` expect `params` to be an object. This request fails:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "sendTokens",
+  "params": [{ "address": "U123456789", "amount": "0.001ADM" }],
+  "id": 1
+}
+```
+
+The server returns JSON-RPC error `501` with message `Send and vote methods expect object params, not an array`. Read methods such as `getAddress` still expect an array. Amount strings use the same `ADM` suffix and integer token units as the CLI.
+:::
 
 ## Methods
 
@@ -46,6 +63,8 @@ Array-style methods require `params` as an array. Template-style send and vote m
 | `sendRich`                         | object       | Transaction ID                              |
 | `sendSignal`                       | object       | Transaction ID                              |
 | `voteFor`                          | object       | Vote transaction                            |
+
+If you use `toHeight` with `getChatTransactions`, configure only ADAMANT Node v0.11.0 or newer. Older nodes can silently ignore that upper bound.
 
 ## Array Params Example
 

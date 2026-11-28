@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
+import http from 'node:http';
 import test from 'node:test';
+import rpc from 'jayson/promise/index.js';
 
 import api from '../utils/api.js';
 import { createAccount } from '../lib/api/account.js';
@@ -28,6 +30,8 @@ import {
   sendTokens,
 } from '../lib/api/send.js';
 import { voteFor } from '../lib/api/vote.js';
+import config from '../utils/config.js';
+import { createRpcMethods, formatRpcListeningStatus } from '../lib/rpc.js';
 
 const originalMethods = new Map();
 
@@ -175,8 +179,8 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
     'orderBy=timestamp:asc',
   );
   await getChats('U1', 'includeDirectTransfers=1');
-  await getChatMessages('U1', 'U2', 'returnUnconfirmed=1');
-  await getChatTransactions('withoutDirectTransfers=1');
+  await getChatMessages('U1', 'U2', 'returnUnconfirmed=1,and:type=8');
+  await getChatTransactions('withoutDirectTransfers=1,and:senderId=U1');
 
   assert.deepEqual(calls, [
     ['transaction', '123', { returnUnconfirmed: '1' }],
@@ -189,9 +193,114 @@ test('read wrappers pass Node v0.10 query parameters through', async () => {
       },
     ],
     ['chats', 'U1', { includeDirectTransfers: '1' }],
-    ['chatMessages', 'U1', 'U2', { returnUnconfirmed: '1' }],
-    ['chatTransactions', { includeDirectTransfers: '0' }],
+    ['chatMessages', 'U1', 'U2', { returnUnconfirmed: '1', type: '8' }],
+    ['chatTransactions', { includeDirectTransfers: '0', senderId: 'U1' }],
   ]);
+});
+
+test('chat and chatroom wrappers send plain filters on the wire through adamant-api', async () => {
+  const wireCalls = [];
+
+  stubApi('get', async (endpoint, params) => {
+    wireCalls.push([endpoint, params]);
+
+    return {
+      success: true,
+      data: { chats: [], messages: [], transactions: [] },
+    };
+  });
+
+  await getChats('U123456', 'includeDirectTransfers=1,and:type=8');
+  await getChatMessages('U123456', 'U654321', 'returnUnconfirmed=1,and:type=8');
+  await getChatTransactions('withoutDirectTransfers=1,and:senderId=U123456');
+
+  assert.equal(wireCalls.length, 3);
+  assert.equal(wireCalls[0][0], 'chatrooms/U123456');
+  assert.equal(wireCalls[0][1].type, '8');
+  assert.equal('and:type' in wireCalls[0][1], false);
+  assert.equal(wireCalls[1][0], 'chatrooms/U123456/U654321');
+  assert.equal(wireCalls[1][1].returnUnconfirmed, '1');
+  assert.equal(wireCalls[1][1].type, '8');
+  assert.equal('and:type' in wireCalls[1][1], false);
+  assert.equal(wireCalls[2][0], 'chats/get');
+  assert.equal(wireCalls[2][1].senderId, 'U123456');
+  assert.equal('and:senderId' in wireCalls[2][1], false);
+});
+
+test('chat and chatroom wrappers reject or: filters and conflicting duplicates before calling adamant-api', async () => {
+  let called = false;
+
+  stubApi('getChats', async (address, params) => {
+    called = true;
+
+    return { success: true, data: { address, params } };
+  });
+  stubApi('getChatMessages', async () => {
+    called = true;
+
+    return { success: true };
+  });
+  stubApi('getChatTransactions', async () => {
+    called = true;
+
+    return { success: true };
+  });
+
+  const chats = await getChats('U1', 'or:type=8');
+  const messages = await getChatMessages('U1', 'U2', 'or:returnUnconfirmed=1');
+  const transactions = await getChatTransactions('or:limit=5');
+  const conflictPlainPlain = await getChats('U1', 'type=8&type=0');
+  const conflictPlainFirst = await getChats('U1', 'type=8,and:type=0');
+  const conflictAndFirst = await getChatMessages(
+    'U1',
+    'U2',
+    'and:type=0,type=8',
+  );
+  const conflictRepeatedAnd = await getChatTransactions(
+    'and:type=8,and:type=0',
+  );
+
+  assert.equal(called, false);
+  assert.equal(chats.success, false);
+  assert.match(chats.errorMessage, /OR filters \(or:\) are not supported/);
+  assert.equal(messages.success, false);
+  assert.match(messages.errorMessage, /OR filters \(or:\) are not supported/);
+  assert.equal(transactions.success, false);
+  assert.match(
+    transactions.errorMessage,
+    /OR filters \(or:\) are not supported/,
+  );
+  assert.equal(conflictPlainPlain.success, false);
+  assert.match(
+    conflictPlainPlain.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
+  assert.equal(conflictPlainFirst.success, false);
+  assert.match(
+    conflictPlainFirst.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
+  assert.equal(conflictAndFirst.success, false);
+  assert.match(
+    conflictAndFirst.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
+  assert.equal(conflictRepeatedAnd.success, false);
+  assert.match(
+    conflictRepeatedAnd.errorMessage,
+    /Conflicting values for chat filter 'type'/,
+  );
+
+  const errorMessageParam = await getChats(
+    'U1',
+    'errorMessage=custom,type=8&type=8,and:type=8',
+  );
+
+  assert.equal(called, true);
+  assert.deepEqual(errorMessageParam, {
+    address: 'U1',
+    params: { errorMessage: 'custom', type: '8' },
+  });
 });
 
 test('basic read wrappers unwrap data payloads', async () => {
@@ -266,6 +375,70 @@ test('send wrappers delegate signing to adamant-api', async () => {
   assert.equal(calls[3][3], '{"type":"signal"}');
 });
 
+test('send wrappers reject bare decimal amounts before calling adamant-api', async () => {
+  let called = false;
+
+  stubApi('sendTokens', async () => {
+    called = true;
+
+    return { data: { transactionId: 'token-tx' } };
+  });
+  stubApi('sendMessage', async () => {
+    called = true;
+
+    return { data: { transactionId: 'message-tx' } };
+  });
+
+  const tokens = await sendTokens('U1', '0.001', 'secret');
+  const message = await sendMessage('U1', 'hello', '0.001', 'secret');
+  const nanoSuffix = await sendTokens('U1', '1NADM', 'secret');
+  const lowerSuffix = await sendTokens('U1', '1adm', 'secret');
+
+  assert.equal(called, false);
+  assert.equal(tokens.success, false);
+  assert.match(
+    tokens.errorMessage,
+    /Wrong 'amount' parameter: 0\.001\. Use 0\.001ADM/,
+  );
+  assert.match(tokens.errorMessage, /100000000/);
+  assert.match(message.errorMessage, /0\.001ADM/);
+  assert.match(nanoSuffix.errorMessage, /Wrong 'amount' parameter: 1NADM/);
+  assert.match(lowerSuffix.errorMessage, /0\.001ADM/);
+});
+
+test('send wrappers keep integer token units and spaced ADM suffixes', async () => {
+  const calls = [];
+
+  stubApi('sendTokens', async (...args) => {
+    calls.push(args);
+
+    return { data: { transactionId: 'token-tx' } };
+  });
+
+  await sendTokens('U1', '100000', 'secret');
+  await sendTokens('U1', '1 ADM', 'secret');
+  await sendTokens('U1', 100000, 'secret');
+
+  assert.deepEqual(calls[0].slice(1), ['U1', 100000, false]);
+  assert.deepEqual(calls[1].slice(1), ['U1', 1, true]);
+  assert.deepEqual(calls[2].slice(1), ['U1', 100000, false]);
+});
+
+test('optional message amount stays empty without calling amount validation', async () => {
+  const calls = [];
+
+  stubApi('sendMessage', async (...args) => {
+    calls.push(args);
+
+    return { data: { transactionId: 'message-tx' } };
+  });
+
+  await sendMessage('U1', 'hello', '', 'secret');
+
+  assert.equal(Number.isNaN(calls[0][4]), true);
+  assert.equal(calls[0][5], false);
+});
+
 test('delegate and vote wrappers pass explicit passphrases', async () => {
   stubApi('newDelegate', async (...args) => ({
     data: { args },
@@ -280,4 +453,159 @@ test('delegate and vote wrappers pass explicit passphrases', async () => {
   assert.deepEqual(await voteFor(['delegatePublicKey', '-other'], 'secret'), {
     args: ['secret', ['+delegatePublicKey', '-other']],
   });
+});
+
+test('voteFor names the network without claiming absence when delegate lookup is unavailable', async () => {
+  stubApi('getDelegate', async () => ({
+    success: false,
+    status: 503,
+    errorMessage: 'Delegate lookup temporarily unavailable',
+  }));
+
+  const result = await voteFor(
+    ['lynx'],
+    'Local fixture passphrase for delegate lookup',
+  );
+
+  assert.equal(result.success, false);
+  assert.match(
+    result.errorMessage,
+    /unable to retrieve the delegate's public key/,
+  );
+  assert.match(
+    result.errorMessage,
+    new RegExp(
+      `Unable to resolve the delegate on the current network \\(${config.network}\\)`,
+    ),
+  );
+  assert.match(result.errorMessage, /public key prefixed by \+ or -/);
+});
+
+test('voteFor rejects non-array and non-string votes without calling adamant-api', async () => {
+  let called = false;
+
+  stubApi('voteForDelegate', async () => {
+    called = true;
+
+    return { success: true };
+  });
+
+  const server = new rpc.Server(createRpcMethods());
+  const callServer = (request) =>
+    new Promise((resolve) => {
+      server.call(request, (err, res) => resolve({ err, res }));
+    });
+
+  const stringVote = await voteFor('lynx', 'secret');
+  const singleCharString = await voteFor('a', 'secret');
+  const emptyArray = await voteFor([], 'secret');
+  const nonStringItem = await voteFor([123], 'secret');
+  const rpcStringVote = await callServer({
+    jsonrpc: '2.0',
+    method: 'voteFor',
+    params: { votes: 'lynx', passphrase: 'secret' },
+    id: 1,
+  });
+
+  assert.equal(called, false);
+  assert.equal(stringVote.success, false);
+  assert.match(stringVote.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(singleCharString.success, false);
+  assert.match(singleCharString.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(emptyArray.success, false);
+  assert.match(emptyArray.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(nonStringItem.success, false);
+  assert.match(nonStringItem.errorMessage, /Wrong 'votes' parameter/);
+  assert.equal(rpcStringVote.res, undefined);
+  assert.equal(rpcStringVote.err.error.code, 501);
+  assert.match(rpcStringVote.err.error.message, /Wrong 'votes' parameter/);
+});
+
+test('object-style RPC methods reject array-wrapped params in the JSON-RPC error envelope', async (t) => {
+  const server = new rpc.Server(createRpcMethods());
+  const httpServer = server.http();
+  let called = false;
+
+  stubApi('sendTokens', async () => {
+    called = true;
+
+    return { data: { transactionId: 'token-tx' } };
+  });
+
+  await new Promise((resolve) => {
+    httpServer.listen(0, '127.0.0.1', resolve);
+  });
+  t.after(() => {
+    httpServer.close();
+  });
+
+  const { port } = httpServer.address();
+  const postRpc = (payload) =>
+    new Promise((resolve, reject) => {
+      const body = JSON.stringify(payload);
+      const req = http.request(
+        {
+          hostname: '127.0.0.1',
+          port,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body),
+          },
+        },
+        (res) => {
+          let raw = '';
+          res.setEncoding('utf8');
+          res.on('data', (chunk) => {
+            raw += chunk;
+          });
+          res.on('end', () => {
+            resolve(JSON.parse(raw));
+          });
+        },
+      );
+      req.on('error', reject);
+      req.end(body);
+    });
+
+  const rejected = await postRpc({
+    jsonrpc: '2.0',
+    method: 'sendTokens',
+    params: [{ address: 'U1', amount: '0.001ADM' }],
+    id: 1,
+  });
+
+  assert.equal(called, false);
+  assert.equal(rejected.result, undefined);
+  assert.equal(rejected.error.code, 501);
+  assert.equal(
+    rejected.error.message,
+    'Send and vote methods expect object params, not an array',
+  );
+
+  const accepted = await postRpc({
+    jsonrpc: '2.0',
+    method: 'sendTokens',
+    params: {
+      address: 'U1',
+      amount: '1ADM',
+      passphrase: 'secret',
+    },
+    id: 2,
+  });
+
+  assert.equal(called, true);
+  assert.equal(accepted.error, undefined);
+  assert.equal(accepted.result, 'token-tx');
+});
+
+test('RPC startup status includes the resolved config path', () => {
+  const status = formatRpcListeningStatus(5080);
+
+  assert.equal(status.success, true);
+  assert.match(status.data, /listening on port 5080/);
+  assert.equal(status.config, config.configPath);
+  assert.equal(status.network, config.network);
+  assert.equal(status.account, config.accountAddress);
+  assert.equal(JSON.stringify(status).includes('passphrase'), false);
 });

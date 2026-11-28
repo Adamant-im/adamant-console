@@ -12,7 +12,9 @@ Never log, print, commit, or paste:
 - Decrypted private messages
 - Private `config.jsonc` files
 
-`config.jsonc` is git-ignored and should remain local to the machine that uses it.
+`adm account new` prints a new passphrase and `privateKey` in its JSON output. Treat that whole response as a secret. Do not paste it into logs, tickets, screenshots, or shell history.
+
+`config.jsonc` is git-ignored and should remain local to the machine that uses it. Confirm which file is active with `adm client` before signing. A home config at `~/.adm/config.jsonc` is preferred over a project-local file.
 
 ## Sending Transactions
 

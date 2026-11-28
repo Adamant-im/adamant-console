@@ -10,7 +10,7 @@ import leven from 'leven';
 import prompt from '../prompt/index.js';
 
 import { log } from '../utils/log.js';
-import config from '../utils/config.js';
+import config, { deriveAccountAddress } from '../utils/config.js';
 import { getClientInfo } from '../utils/client.js';
 import { addHelp } from '../utils/help.js';
 
@@ -98,7 +98,24 @@ installDelegateCommands(program);
 installVoteCommands(program);
 installInitCommand(program);
 
-const client = program.command('client').description('inspect Console client');
+const client = program
+  .command('client')
+  .description('inspect Console client')
+  .addHelpCommand(true)
+  .action(() => {
+    log(getClientInfo());
+  });
+
+addHelp(
+  client,
+  `
+With no subcommand, prints the same version and config summary as client version.
+
+Examples:
+  $ adm client
+  $ adm client version
+`,
+);
 
 addHelp(
   client.command('version'),
@@ -113,7 +130,10 @@ Examples:
   });
 
 program.on('option:passphrase', () => {
-  config.passphrase = program.opts().passphrase;
+  const { passphrase } = program.opts();
+
+  config.accountAddress = deriveAccountAddress(passphrase);
+  config.passphrase = passphrase;
 });
 
 // output help information on unknown commands

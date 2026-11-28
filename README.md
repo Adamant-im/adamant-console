@@ -13,11 +13,11 @@ Full Console documentation is published at [console.docs.adamant.im](https://con
 - JSON-RPC server for integration from other languages and services
 - Local ADM account generation, signing, voting, token transfers, and encrypted messages
 - Configurable mainnet/testnet node lists and RPC port
-- Shared ADAMANT Node API v0.10.0 behavior through [`adamant-api`](https://github.com/Adamant-im/adamant-api-jsclient)
+- Shared ADAMANT Node API v0.11.0 behavior through [`adamant-api`](https://github.com/Adamant-im/adamant-api-jsclient)
 
 ## Requirements
 
-- Node.js 22.13.0 or newer
+- Node.js 22.22.2+ (on 22.x) or 24.15.0+
 - npm 10 or newer
 
 ## Installation
@@ -40,7 +40,7 @@ Create a user config from the bundled default:
 node bin/adamant.js init
 ```
 
-By default, the file is created as `~/.adm/config.jsonc`. You can also keep `config.jsonc` in the current working directory for local overrides.
+By default, the file is created as `~/.adm/config.jsonc`. Console checks that file first, then `./config.jsonc` in the current working directory, then the packaged `config.default.jsonc`. The first existing user file wins. `adm client` prints the resolved path. The JSON-RPC server uses the same resolution and prints the path at startup.
 
 Important fields:
 
@@ -92,7 +92,7 @@ adm node height
 You can override the configured passphrase for a single CLI invocation:
 
 ```sh
-adm --passphrase "your local passphrase" send tokens U123456789 1
+adm --passphrase "your local passphrase" send tokens U123456789 1ADM
 ```
 
 Avoid shell history exposure when using passphrase flags in shared environments.
@@ -146,13 +146,13 @@ The server listens on `config.rpc.port` and exposes methods that match the exist
 - `sendSignal`
 - `voteFor`
 
-Array-style methods accept JSON-RPC `params` as an array. Template-style send and vote methods accept named object parameters.
+Array-style methods accept JSON-RPC `params` as an array. Send and vote methods accept a named object. An array-wrapped object such as `[{"address":"U…","amount":"0.001ADM"}]` is rejected with `Send and vote methods expect object params, not an array`.
 
 ## JavaScript Integrations
 
 Console is built on [`adamant-api`](https://js.docs.adamant.im/). Use `adamant-api` directly for programmatic JavaScript access, lower-level protocol features, typed DTOs, metadata, WebSocket subscriptions, and advanced transaction handling.
 
-The Console wrappers preserve Node v0.10.0 response fields, including numeric `count`, transaction `timestampMs`, and unconfirmed transaction fields returned with `returnUnconfirmed=1`. Chat query helpers send `includeDirectTransfers`; the deprecated `withoutDirectTransfers` input is accepted only as a compatibility alias and normalized before calling `adamant-api`.
+The Console wrappers preserve Node v0.11.0 response fields, including numeric `count`, transaction `timestampMs`, and unconfirmed transaction fields returned with `returnUnconfirmed=1`. Chat query helpers send plain `AND`-combined filter names and `includeDirectTransfers` (rejecting unsupported `or:` filters); the deprecated `withoutDirectTransfers` input is accepted only as a compatibility alias and normalized before calling `adamant-api`.
 
 ## Development
 
@@ -195,8 +195,8 @@ This project intentionally stays small. Prefer focused changes over framework mi
 - [ADAMANT Improvement Proposals](https://aips.adamant.im/all)
 - [AIPs source](https://github.com/Adamant-im/AIPs)
 - [ADAMANT Node](https://github.com/Adamant-im/adamant)
-- [ADAMANT API schema](https://schema.adamant.im/)
-- [ADAMANT schema source](https://github.com/Adamant-im/adamant-schema)
+- [ADAMANT API schema](https://docs.adamant.im/schema/)
+- [ADAMANT OpenAPI specification source](https://github.com/Adamant-im/adamant/tree/master/openapi)
 - [ADAMANT JavaScript API](https://github.com/Adamant-im/adamant-api-jsclient)
 - [ADAMANT JavaScript API docs](https://js.docs.adamant.im/)
 - [ADAMANT wallet metadata](https://github.com/Adamant-im/adamant-wallets)

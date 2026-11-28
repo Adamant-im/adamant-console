@@ -30,7 +30,7 @@ function runNode(args, options = {}) {
   });
 }
 
-function readConfigFromChild(configDir) {
+function readConfigFromChild(configDir, cwd = configDir) {
   const source = `
     const { default: config } = await import(${JSON.stringify(configModuleUrl)});
     console.log(JSON.stringify({
@@ -43,14 +43,14 @@ function readConfigFromChild(configDir) {
   return JSON.parse(
     runNode(['--input-type=module', '--eval', source], {
       configDir,
-      cwd: configDir,
+      cwd,
     }),
   );
 }
 
 function createTempConfigDir(t) {
-  const configDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'adamant-console-test-'),
+  const configDir = fs.realpathSync(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'adamant-console-test-')),
   );
 
   t.after(() => {
@@ -105,6 +105,59 @@ test('config derives an account only for an intentional passphrase', (t) => {
   assert.equal(config.account, createAddressFromPublicKey(keypair.publicKey));
 });
 
+test('config prefers the user config directory over the working directory', (t) => {
+  const configDir = createTempConfigDir(t);
+  const cwdDir = createTempConfigDir(t);
+
+  fs.writeFileSync(
+    path.join(configDir, 'config.jsonc'),
+    JSON.stringify({ network: 'mainnet' }),
+  );
+  fs.writeFileSync(
+    path.join(cwdDir, 'config.jsonc'),
+    JSON.stringify({
+      network: 'testnet',
+      passphrase: 'advance pulse leisure sadness orange antenna spare brief',
+    }),
+  );
+
+  const config = readConfigFromChild(configDir, cwdDir);
+
+  assert.equal(config.network, 'mainnet');
+  assert.equal(config.configPath, path.join(configDir, 'config.jsonc'));
+  assert.equal(config.account, 'Not set');
+});
+
+test('config uses the working directory file when the user directory is empty', (t) => {
+  const configDir = createTempConfigDir(t);
+  const cwdDir = createTempConfigDir(t);
+
+  fs.writeFileSync(
+    path.join(cwdDir, 'config.jsonc'),
+    JSON.stringify({ network: 'mainnet' }),
+  );
+
+  const config = readConfigFromChild(configDir, cwdDir);
+
+  assert.equal(config.network, 'mainnet');
+  assert.equal(config.configPath, path.join(cwdDir, 'config.jsonc'));
+});
+
+test('adm client without a subcommand reports version and config', (t) => {
+  const configDir = createTempConfigDir(t);
+  const output = runNode([cliPath, 'client'], {
+    configDir,
+    cwd: configDir,
+  });
+  const info = JSON.parse(output);
+
+  assert.equal(info.success, true);
+  assert.match(info.version, /^\d+\.\d+\.\d+/);
+  assert.match(info.config, /config\.default\.jsonc$/);
+  assert.equal(info.network, 'testnet');
+  assert.equal(info.account, 'Not set');
+});
+
 test('adm client version reports config, network, and unset account', (t) => {
   const configDir = createTempConfigDir(t);
   const output = runNode([cliPath, 'client', 'version'], {
@@ -118,4 +171,48 @@ test('adm client version reports config, network, and unset account', (t) => {
   assert.match(info.config, /config\.default\.jsonc$/);
   assert.equal(info.network, 'testnet');
   assert.equal(info.account, 'Not set');
+});
+
+test('RPC startup reports the account selected by --passphrase', (t) => {
+  const configDir = createTempConfigDir(t);
+  const configPath = path.join(configDir, 'config.jsonc');
+  const filePassphrase = 'Local fixture passphrase in config only';
+  const override = 'Local fixture passphrase for the CLI override';
+  const { publicKey } = createKeypairFromPassphrase(override);
+
+  fs.writeFileSync(
+    configPath,
+    JSON.stringify({ passphrase: filePassphrase, rpc: { port: 0 } }),
+    { mode: 0o600 },
+  );
+
+  const source = `
+    import http from 'node:http';
+    const listen = http.Server.prototype.listen;
+    http.Server.prototype.listen = function (port) {
+      return listen.call(this, port, '127.0.0.1', () => this.close());
+    };
+    await import(${JSON.stringify(pathToFileURL(cliPath).href)});
+  `;
+  const output = runNode(
+    [
+      '--input-type=module',
+      '--eval',
+      source,
+      '--',
+      cliPath,
+      '--passphrase',
+      override,
+      'rpc',
+      'server',
+    ],
+    { configDir, cwd: configDir },
+  );
+
+  const status = JSON.parse(output);
+
+  assert.equal(status.config, configPath);
+  assert.equal(status.account, createAddressFromPublicKey(publicKey));
+  assert.equal(output.includes(filePassphrase), false);
+  assert.equal(output.includes(override), false);
 });

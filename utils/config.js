@@ -86,6 +86,22 @@ export function hasConfiguredPassphrase(passphrase) {
   );
 }
 
+/**
+ * Derives the public account address for the effective passphrase.
+ *
+ * @param {unknown} passphrase Configured passphrase or CLI override
+ * @returns {string} ADAMANT account address or the label for an unset passphrase
+ */
+export function deriveAccountAddress(passphrase) {
+  if (!hasConfiguredPassphrase(passphrase)) {
+    return unsetAccountLabel;
+  }
+
+  const { publicKey } = createKeypairFromPassphrase(passphrase);
+
+  return createAddressFromPublicKey(publicKey);
+}
+
 const defaultConfig = loadConfig(defaultConfigFilePath);
 
 let config = {
@@ -111,23 +127,12 @@ for (const configPath of configPaths) {
   }
 
   if (existingConfigPath) {
-    const loadedConfig = loadConfig(existingConfigPath);
-    const mergedConfig = {
+    config = {
       ...config,
-      ...loadedConfig,
+      ...loadConfig(existingConfigPath),
       configPath: existingConfigPath,
-      accountAddress: unsetAccountLabel,
     };
-
-    if (hasConfiguredPassphrase(mergedConfig.passphrase)) {
-      const keypair = createKeypairFromPassphrase(mergedConfig.passphrase);
-
-      mergedConfig.accountAddress = createAddressFromPublicKey(
-        keypair.publicKey,
-      );
-    }
-
-    config = mergedConfig;
+    config.accountAddress = deriveAccountAddress(config.passphrase);
 
     break;
   }
